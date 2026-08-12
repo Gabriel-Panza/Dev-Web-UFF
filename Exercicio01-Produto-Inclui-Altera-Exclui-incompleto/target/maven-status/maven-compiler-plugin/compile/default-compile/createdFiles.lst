@@ -1,0 +1,8 @@
+com\carlosribeiro\util\FabricaDeEntityManager.class
+com\carlosribeiro\dao\ProdutoDAO.class
+com\carlosribeiro\util\Util.class
+com\carlosribeiro\excecao\ProdutoNaoEncontradoException.class
+com\carlosribeiro\dao\impl\JPAProdutoDAO.class
+com\carlosribeiro\modelo\Produto.class
+com\carlosribeiro\util\FabricaDeDAOs.class
+com\carlosribeiro\Principal.class
