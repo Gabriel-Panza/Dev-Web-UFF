@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.LockModeType;
 
 public class JPAProdutoDAO implements ProdutoDAO
 {	
@@ -26,8 +27,8 @@ public class JPAProdutoDAO implements ProdutoDAO
 
 			tx.begin();
 			em.persist(umProduto);
-			System.out.println(umProduto.getId());
-			umProduto.setNome("abc");
+			//System.out.println(umProduto.getId());
+			//umProduto.setNome("abc");
 			tx.commit();
 
 			return umProduto.getId();
@@ -35,7 +36,9 @@ public class JPAProdutoDAO implements ProdutoDAO
 		catch(RuntimeException e)
 		{	if (tx != null)
 			{
-				tx.rollback();
+				try{
+					tx.rollback();
+				} catch (RuntimeException _) {}
 			}
 			throw e;
 		}
@@ -76,75 +79,83 @@ public class JPAProdutoDAO implements ProdutoDAO
 
 	public void altera(Produto umProduto) throws ProdutoNaoEncontradoException
 	{
-// 		EntityManager em = null;
-// 		EntityTransaction tx = null;
-// 		Produto produto = null;
-// 		try
-// 		{
-// 			em = FabricaDeEntityManager.criarEntityManager();
-// 			tx = em.getTransaction();
-// 			tx.begin();
+		EntityManager em = null;
+		EntityTransaction tx = null;
+		Produto produto = null;
+		try
+		{
+			em = FabricaDeEntityManager.criarEntityManager();
+			tx = em.getTransaction();
+			tx.begin();
 
-// // ==>
+			produto = em.find(Produto.class, umProduto.getId(), LockModeType.PESSIMISTIC_WRITE);
 
-// 			if (produto == null) {
-// // ==>
-// 			}
-// 			// O merge entre nada e tudo é tudo. Ao tentar alterar um produto deletado ele será re-inserido
-// 			// no banco de dados.
-// // ==>
+			if (produto == null) {
+				tx.rollback();
+				throw new RuntimeException(
+					"Produto com id = " + umProduto.getId() + " não encontrado."
+				);
+			}
+			// O merge entre nada e tudo é tudo. Ao tentar alterar um produto deletado ele será re-inserido
+			// no banco de dados.
 
-// // ==>
-// 		}
-// 		catch(RuntimeException e)
-// 		{
-// 			if (tx != null) {   
-// 				tx.rollback();
-// 		    }
-// 		    throw e;
-// 		}
-// 		finally
-// 		{   
-// 			if (em != null) {
-// 				em.close();
-// 			}
-// 		}
+			em.merge(umProduto);
+					
+			tx.commit();
+		}
+		catch(RuntimeException e)
+		{
+			if (tx != null) {   
+				try{
+					tx.rollback();
+				} catch (RuntimeException _) {}
+			}
+		    throw e;
+		}
+		finally
+		{   
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	public void exclui(long numero) throws ProdutoNaoEncontradoException 
 	{
-//		EntityManager em = null;
-//		EntityTransaction tx = null;
-//
-//		try
-//		{
-//			em = FabricaDeEntityManager.criarEntityManager();
-//			tx = em.getTransaction();
-//			tx.begin();
-//
-//// ==>
-//
-//			if(produto == null)
-//			{	tx.rollback();
-//				throw new ProdutoNaoEncontradoException("Produto não encontrado");
-//			}
-//
-//// ==>
-//			tx.commit();
-//		}
-//		catch(RuntimeException e)
-//		{
-//			if (tx != null)
-//		    {   tx.rollback();
-//		    }
-//		    throw e;
-//		}
-//		finally
-//		{   
-//			if (em != null) {
-//				em.close();
-//			}
-//		}
+		EntityManager em = null;
+		EntityTransaction tx = null;
+
+		try
+		{
+			em = FabricaDeEntityManager.criarEntityManager();
+			tx = em.getTransaction();
+			tx.begin();
+
+			Produto produto = em.find(Produto.class, numero);
+
+			if(produto == null)
+			{	tx.rollback();
+				throw new ProdutoNaoEncontradoException("Produto não encontrado");
+			}
+
+			em.remove(produto);
+			tx.commit();
+		}
+		catch(RuntimeException e)
+		{
+			if (tx != null) {   
+				try{
+					tx.rollback();
+				} catch (RuntimeException _) {}
+			}
+		    throw e;
+		}
+		finally
+		{   
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	public List<Produto> recuperaProdutos()

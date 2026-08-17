@@ -11,13 +11,15 @@ import corejava.Console;
 import java.util.List;
 
 public class Principal {
+	//@Autowired
+	//private ProdutoDAO produtoDAO;
 	public static void main(String[] args) {
 		String nome;
 		double lanceMinimo;
 		String dataCadastro;
 		Produto umProduto;
 
-		ProdutoDAO produtoDAO = new JPAProdutoDAO(); // FabricaDeDAOs.getDAO(ProdutoDAO.class);
+		ProdutoDAO produtoDAO = FabricaDeDAOs.getDAO(ProdutoDAO.class);
 
 		boolean continua = true;
 		while (continua) {
