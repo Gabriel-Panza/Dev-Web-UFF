@@ -1,7 +1,6 @@
 package com.carlosribeiro;
 
 import com.carlosribeiro.dao.ProdutoDAO;
-import com.carlosribeiro.dao.impl.JPAProdutoDAO;
 import com.carlosribeiro.excecao.ProdutoNaoEncontradoException;
 import com.carlosribeiro.modelo.Produto;
 import com.carlosribeiro.util.FabricaDeDAOs;

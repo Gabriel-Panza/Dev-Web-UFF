@@ -1,0 +1,4 @@
+com\carlosribeiro\apirestful\repository\ProdutoRepository.class
+com\carlosribeiro\apirestful\controller\ProdutoController.class
+com\carlosribeiro\apirestful\model\Produto.class
+com\carlosribeiro\apirestful\ApirestfulApplication.class

@@ -1,6 +1,5 @@
 package com.carlosribeiro.util;
 
-import com.carlosribeiro.dao.impl.JPAProdutoDAO;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;

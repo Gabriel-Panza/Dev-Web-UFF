@@ -165,7 +165,9 @@ public class JPAProdutoDAO implements ProdutoDAO
 		try
 		{	em = FabricaDeEntityManager.criarEntityManager();
 
-			List produtos = em.createQuery("SELECT p FROM Produto p ORDER BY p.id").getResultList();
+			List<Produto> produtos = em.createQuery(
+				"SELECT p FROM Produto p ORDER BY p.id", Produto.class
+			).getResultList();
 			
 			return produtos;
 		}

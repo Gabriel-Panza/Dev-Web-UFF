@@ -55,6 +55,7 @@ public class Produto
 
     // ********* Métodos do Tipo Set *********
 
+    @SuppressWarnings("unused")
     private void setId(Long id)
     {	this.id = id;
     }

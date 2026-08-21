@@ -1,3 +1,5 @@
 {
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.import.maven.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

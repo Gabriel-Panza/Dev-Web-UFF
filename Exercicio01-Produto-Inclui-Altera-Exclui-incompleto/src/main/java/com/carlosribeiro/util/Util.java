@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Util
 {
-	private static NumberFormat nf = NumberFormat.getInstance(new Locale("pt","BR"));
+	private static NumberFormat nf = NumberFormat.getInstance(Locale.of("pt", "BR"));
 
 	// Formatador para imprimir e efetuar o parse de objetos date-time
 	private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
