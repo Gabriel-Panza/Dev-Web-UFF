@@ -1,0 +1,45 @@
+### GET
+GET http://localhost:8080/produtos
+
+### POST
+POST http://localhost:8080/produtos
+Content-Type: application/json
+
+{
+	"imagem": "abacate.png",
+	"nome": "Abacate",
+	"descricao": "1 unidade aprox. 750g",
+	"disponivel": true,
+	"qtdEstoque": 100,
+	"preco": 2.45,
+	"dataCadastro": "2025-04-26",
+	"categoria": {
+		"id": 1,
+		"nome": "fruta"
+	}
+}
+
+### PUT
+PUT http://localhost:8080/produtos
+Content-Type: application/json
+
+{
+	"imagem": "abacaxi.png",
+	"nome": "Abacaxi",
+	"descricao": "1 unidade aprox. 750g",
+	"disponivel": true,
+	"qtdEstoque": 100,
+	"preco": 2.45,
+	"dataCadastro": "2025-04-26",
+	"categoria": {
+		"id": 1,
+		"nome": "fruta"
+	},
+    "id": 1
+}
+
+### GET para /produtos/1
+GET http://localhost:8080/produtos/1
+
+### DELETE para /produtos/1
+DELETE http://localhost:8080/produtos/1

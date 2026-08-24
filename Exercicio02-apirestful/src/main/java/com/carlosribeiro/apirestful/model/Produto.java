@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Produto {
@@ -21,13 +24,16 @@ public class Produto {
     private int qtdEstoque;
     private BigDecimal preco;
     private LocalDate dataCadastro;
-    private String categoria;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "PRODUTO_CATEGORIA_FK"))
+    private Categoria categoria;
 
     public Produto() {
     }
 
     public Produto(String imagem, String nome, String descricao, boolean disponivel,
-                   int qtdEstoque, BigDecimal preco, LocalDate dataCadastro, String categoria) {
+                   int qtdEstoque, BigDecimal preco, LocalDate dataCadastro, Categoria categoria) {
         this.imagem = imagem;
         this.nome = nome;
         this.descricao = descricao;
@@ -102,11 +108,11 @@ public class Produto {
         this.dataCadastro = dataCadastro;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 }

@@ -1,4 +1,8 @@
 com\carlosribeiro\apirestful\repository\ProdutoRepository.class
-com\carlosribeiro\apirestful\controller\ProdutoController.class
+com\carlosribeiro\apirestful\exception\EntidadeNaoEncontradaException.class
 com\carlosribeiro\apirestful\model\Produto.class
+com\carlosribeiro\apirestful\model\Categoria.class
+com\carlosribeiro\apirestful\repository\CategoriaRepository.class
+com\carlosribeiro\apirestful\controller\ProdutoController.class
 com\carlosribeiro\apirestful\ApirestfulApplication.class
+com\carlosribeiro\apirestful\service\ProdutoService.class
