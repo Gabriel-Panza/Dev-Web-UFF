@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.carlosribeiro.apirestful.dto.ProdutoDto;
 import com.carlosribeiro.apirestful.model.Produto;
 import com.carlosribeiro.apirestful.service.ProdutoService;
 
@@ -27,6 +29,11 @@ public class ProdutoController {
     @GetMapping     //GET para http://localhost:8080/produtos
     public List<Produto> recuperarProdutos(){
         return produtoService.recuperarProdutos();
+    }
+
+    @GetMapping("resumo")     //GET para http://localhost:8080/produtos/resumo?comCategoria=true
+    public List<ProdutoDto> recuperarProdutosDto(@RequestParam(name = "comCategoria", defaultValue = "false") boolean comCategoria){
+        return produtoService.recuperarProdutosDto(comCategoria);
     }
 
     @GetMapping("{idProduto}")     //GET para http://localhost:8080/produtos/1

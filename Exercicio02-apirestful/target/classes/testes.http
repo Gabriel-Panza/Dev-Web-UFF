@@ -1,5 +1,11 @@
-### GET
+### GET para produtos
 GET http://localhost:8080/produtos
+
+### GET para produtos/resumo sem categoria
+GET http://localhost:8080/produtos/resumo
+
+### GET para produtos/resumo com categoria
+GET http://localhost:8080/produtos/resumo?comCategoria=true
 
 ### POST
 POST http://localhost:8080/produtos
