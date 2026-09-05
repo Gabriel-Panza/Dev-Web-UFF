@@ -7,6 +7,12 @@ GET http://localhost:8080/produtos/resumo
 ### GET para produtos/resumo com categoria
 GET http://localhost:8080/produtos/resumo?comCategoria=true
 
+### GET para produtos/resumo com categoria
+GET http://localhost:8080/produtos/mapstruct?comCategoria=true
+
+### GET para produtos/resumo com categoria
+GET http://localhost:8080/categorias/mapstruct/2
+
 ### POST
 POST http://localhost:8080/produtos
 Content-Type: application/json

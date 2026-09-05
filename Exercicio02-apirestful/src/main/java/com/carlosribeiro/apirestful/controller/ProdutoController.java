@@ -3,12 +3,14 @@ package com.carlosribeiro.apirestful.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.carlosribeiro.apirestful.dto.ProdutoDto;
+import com.carlosribeiro.apirestful.exception.EntidadeNaoEncontradaException;
 import com.carlosribeiro.apirestful.model.Produto;
 import com.carlosribeiro.apirestful.service.ProdutoService;
 
@@ -36,9 +38,22 @@ public class ProdutoController {
         return produtoService.recuperarProdutosDto(comCategoria);
     }
 
+    @GetMapping("mapstruct")     //GET para http://localhost:8080/produtos/mapstruct?comCategoria=true
+    public List<?> recuperarProdutosDtoComOuSemCategoriaResumo(@RequestParam(name = "comCategoria", defaultValue = "false") boolean comCategoria){
+        if (comCategoria) {
+            return produtoService.recuperarProdutosDtoComCategoriaResumo();
+        }
+        return produtoService.recuperarProdutosDtoSemCategoriaResumo();
+    }
+
     @GetMapping("{idProduto}")     //GET para http://localhost:8080/produtos/1
     public ResponseEntity<?> recuperarUmProdutoPorId(@PathVariable("idProduto") Long id){
-        return produtoService.recuperarUmProdutoPorId(id);
+        try {
+            Produto produto = produtoService.recuperarUmProdutoPorId(id);
+            return new ResponseEntity<>(produto, HttpStatus.OK);
+        } catch(EntidadeNaoEncontradaException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping

@@ -3,6 +3,8 @@ package com.carlosribeiro.apirestful.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -26,7 +28,8 @@ public class Produto {
     private BigDecimal preco;
     private LocalDate dataCadastro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "produtos"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "PRODUTO_CATEGORIA_FK"))
     private Categoria categoria;
 

@@ -9,8 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.carlosribeiro.apirestful.dto.CategoriaDto;
+import com.carlosribeiro.apirestful.dto.ProdutoComCategoriaResumo;
 import com.carlosribeiro.apirestful.dto.ProdutoDto;
+import com.carlosribeiro.apirestful.dto.ProdutoSemCategoriaResumo;
 import com.carlosribeiro.apirestful.exception.EntidadeNaoEncontradaException;
+import com.carlosribeiro.apirestful.mapper.ProdutoMapper;
 import com.carlosribeiro.apirestful.model.Produto;
 import com.carlosribeiro.apirestful.repository.ProdutoRepository;
 
@@ -18,6 +21,8 @@ import com.carlosribeiro.apirestful.repository.ProdutoRepository;
 public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
+    @Autowired
+    private ProdutoMapper produtoMapper;
 
     public List<Produto> recuperarProdutos(){
         return produtoRepository.findAll();
@@ -47,14 +52,10 @@ public class ProdutoService {
         }
     }
 
-    public ResponseEntity<?> recuperarUmProdutoPorId(Long id){
-        try {
-            Produto produto = produtoRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto com id = " + id + " não encontrado."));
-            return new ResponseEntity<>(produto, HttpStatus.OK);
-        } catch(EntidadeNaoEncontradaException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
+    public Produto recuperarUmProdutoPorId(Long id){
+        return produtoRepository.findById(id)
+        .orElseThrow(() -> new EntidadeNaoEncontradaException(
+            "Produto com id = " + id + " não encontrado."));
     }
 
     public Produto cadastrarProduto(Produto produto){
@@ -67,5 +68,15 @@ public class ProdutoService {
 
     public void deletarUmProdutoPorId(Long id){
         produtoRepository.deleteById(id);
+    }
+
+    public List<ProdutoComCategoriaResumo> recuperarProdutosDtoComCategoriaResumo() {
+        List<Produto> produtos = produtoRepository.recuperarProdutosComCategoria();
+        return produtoMapper.toProdutosComCategoriaResumo(produtos);
+    }
+
+    public List<ProdutoSemCategoriaResumo> recuperarProdutosDtoSemCategoriaResumo() {
+        List<Produto> produtos = produtoRepository.findAll();
+        return produtoMapper.toProdutosSemCategoriaResumo(produtos);
     }
 }
