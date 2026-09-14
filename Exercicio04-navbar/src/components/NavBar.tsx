@@ -4,8 +4,8 @@ const NavBar = () => {
   return (
     <nav className="w-full border-b border-[var(--border)]">
       <div className="overflow-x-auto px-4 py-2">
-        <div className="flex min-w-max items-center justify-center gap-5">
-          <div className="flex items-center gap-5">
+        <div className="flex min-w-max items-center justify-between gap-5">
+          <div className="flex justify-between gap-5">
             <a href="/" aria-label="Página inicial">
               <img
                 className="h-10 w-10 object-contain"
