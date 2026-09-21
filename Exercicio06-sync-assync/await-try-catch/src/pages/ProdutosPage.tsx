@@ -7,7 +7,10 @@ const ProdutosPage = () => {
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(true);
 
+  console.log("1, 9");
+
   useEffect(() => {
+    console.log("4");
     const controller = new AbortController();
 
     const getProdutos = async () => {
@@ -15,6 +18,7 @@ const ProdutosPage = () => {
         const response = await fetch("/api/produtos", {
           signal: controller.signal,
         });
+        console.log("6");
 
         if (!response.ok) {
           throw new Error(
@@ -24,7 +28,10 @@ const ProdutosPage = () => {
         }
 
         const produtos = (await response.json()) as Produto[];
+        console.log("7");
+        console.log("produtos = ", produtos);
         setProdutos(produtos);
+        console.log("8");
       } catch (error: unknown) {
         if (controller.signal.aborted) return;
         setErro(
@@ -38,11 +45,19 @@ const ProdutosPage = () => {
     };
 
     void getProdutos();
+    console.log("5");
     return () => controller.abort();
   }, []);
 
+  console.log("2, 10");
+
   if (erro) return <p className="text-xl">{erro}</p>;
-  if (carregando) return <h5 className="text-xl">Recuperando produtos...</h5>;
+  if (carregando) {
+    console.log("3");
+    return <h5 className="text-xl">Recuperando produtos...</h5>;
+  }
+
+  console.log("11");
 
   return (
     <>

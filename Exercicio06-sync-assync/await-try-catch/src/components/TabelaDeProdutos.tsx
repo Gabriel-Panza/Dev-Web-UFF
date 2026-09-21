@@ -58,7 +58,7 @@ const TabelaDeProdutos = ({ produtos }: Props) => {
               <td className="w-[13%] border-r border-r-gray-200 py-1 text-center">
                 {produto.categoria.nome}
               </td>
-              <td className="w-[20%] border-r border-r-gray-200 py-1 ps-2">
+              <td className="w-[20%] border-r border-r-gray-200 py-1 text-center">
                 {produto.nome}
               </td>
               <td className="w-[13%] border-r border-r-gray-200 py-1 text-center">
