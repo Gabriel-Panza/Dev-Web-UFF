@@ -7,11 +7,15 @@ const ProdutosPage = () => {
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(true);
 
+  console.log("1, 9");
+
   useEffect(() => {
+    console.log("4");
     const controller = new AbortController();
 
     fetch("/api/produtos", { signal: controller.signal })
       .then((response) => {
+        console.log("6");
         if (!response.ok) {
           throw new Error(
             "Ocorreu um erro ao recuperar produtos. Status code: " +
@@ -21,7 +25,10 @@ const ProdutosPage = () => {
         return response.json() as Promise<Produto[]>;
       })
       .then((produtos) => {
+        console.log("7");
+        console.log("produtos = ", produtos);
         setProdutos(produtos);
+        console.log("8");
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
@@ -35,11 +42,19 @@ const ProdutosPage = () => {
         if (!controller.signal.aborted) setCarregando(false);
       });
 
+    console.log("5");
     return () => controller.abort();
   }, []);
 
+  console.log("2, 10");
+
   if (erro) return <p className="text-xl">{erro}</p>;
-  if (carregando) return <h5 className="text-xl">Recuperando produtos...</h5>;
+  if (carregando) {
+    console.log("3");
+    return <h5 className="text-xl">Recuperando produtos...</h5>;
+  }
+
+  console.log("11");
 
   return (
     <>

@@ -10,9 +10,11 @@ import com.carlosribeiro.apirestful.dto.CategoriaResumoComProdutos;
 import com.carlosribeiro.apirestful.service.CategoriaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+@CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("categorias")
 public class CategoriaController {
