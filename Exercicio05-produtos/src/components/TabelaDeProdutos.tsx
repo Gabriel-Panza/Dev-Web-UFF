@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import type { Produto } from "../interfaces/Produto";
 
 const imagens = import.meta.glob<string>("../assets/*.png", {
@@ -12,8 +13,8 @@ interface Props {
 
 const TabelaDeProdutos = ({ produtos }: Props) => {
   return (
-    <table className="w-full">
-      <thead>
+    <table className="w-full border-2 border-gray-500/40">
+      <thead className="bg-gray-500/20">
         <tr>
           <th>Id</th>
           <th>Imagem</th>
@@ -28,20 +29,22 @@ const TabelaDeProdutos = ({ produtos }: Props) => {
       <tbody>
         {produtos.map((produto) => (
           <tr key={produto.id}>
-            <td>{produto.id}</td>
-            <td>
+            <td className="w-[8%]">{produto.id}</td>
+            <td className="w-[10%]">
               <img
                 src={imagens[`../assets/${produto.imagem}`]}
                 alt={produto.nome}
                 className="mx-auto h-12 w-12 object-contain"
               />
             </td>
-            <td>{produto.categoria.nome}</td>
-            <td>{produto.nome}</td>
-            <td>{produto.disponivel ? "Sim" : "Não"}</td>
-            <td>{produto.dataCadastro.getFullYear()}</td>
-            <td>{produto.preco}</td>
-            <td>
+            <td className="w-[13%]">{produto.categoria.nome}</td>
+            <td className="w-[20%]">{produto.nome}</td>
+            <td className="w-[13%]">{produto.disponivel ? "Sim" : "Não"}</td>
+            <td className="w-[13%]">
+              {dayjs(produto.dataCadastro).format("DD/MM/YYYY")}
+            </td>
+            <td className="w-[10%]">{produto.preco}</td>
+            <td className="w-[13%]">
               <button type="button" className="btn-danger px-3 py-1">
                 Excluir
               </button>
