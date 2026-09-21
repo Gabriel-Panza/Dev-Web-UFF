@@ -8,7 +8,7 @@ As duas aplicações React mostram os produtos da API do `Exercicio02-apirestful
 ## Executar
 
 1. Inicie o MySQL/MariaDB local, caso ainda não esteja ativo. A API já está configurada para tentar o servidor da UFF e, se indisponível, usar `localhost:3306/desweb`.
-2. Estando em `Exercicio06-typesOfCatch`, inicie a API em um terminal:
+2. Estando em `Exercicio06-sync-assync`, inicie a API em um terminal:
 
    ```powershell
    cd ..\Exercicio02-apirestful
@@ -17,7 +17,7 @@ As duas aplicações React mostram os produtos da API do `Exercicio02-apirestful
 
    O parâmetro `update` evita que a configuração padrão `create` recrie as tabelas e apague os dados durante o teste. A API deve responder em `http://localhost:8080/produtos`.
 
-3. Em outro terminal aberto em `Exercicio06-typesOfCatch`, escolha uma versão:
+3. Em outro terminal aberto em `Exercicio06-sync-assync`, escolha uma versão:
 
    ```powershell
    cd .\fetch-then-then-catch
