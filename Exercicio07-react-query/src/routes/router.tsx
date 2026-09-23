@@ -6,11 +6,13 @@ import HomePage from "../pages/HomePage";
 import CadastrarProdutoPage from "../pages/CadastrarProdutoPage";
 import LoginPage from "../pages/LoginPage";
 import ProdutosPage from "../pages/ProdutosPage";
+import ErrorPage from "../pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
+        errorElement: <ErrorPage />,
         children: [
             // A linha abaixo define a rota “índice” (a rota padrão) dentro do grupo de rotas
             // filhas do caminho /. Ou seja, quando o usuário acessa exatamente /, ela redireciona 
@@ -24,9 +26,7 @@ const router = createBrowserRouter([
             {path: "favoritos", element: <FavoritosPage />},
             {path: "listar-produtos", element: <ProdutosPage />},
             {path: "cadastrar-produto", element: <CadastrarProdutoPage />},
-            {path: "login", element: <LoginPage />},
-            // A página de erro já faz isso
-            {path: "*", element: <h5 className="text-xl text-center mt-3">404 - Página não encontrada</h5>}
+            {path: "login", element: <LoginPage />}
         ]
     }
 ])
