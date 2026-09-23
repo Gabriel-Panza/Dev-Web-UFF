@@ -1,27 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
 import TabelaDeProdutos from "../components/TabelaDeProdutos";
-
-const recuperarProdutos = async () => {
-  const response = await fetch("/api/produtos");
-  if (!response.ok) {
-    throw new Error(
-      "Ocorreu um erro ao recuperar os produtos. Status Code = " +
-        response.status,
-    );
-  }
-  return response.json();
-};
+import useRecuperarProdutos from "../hooks/useRecuperarProdutos";
 
 const ProdutosPage = () => {
   const {
     data: produtos,
     isPending: recuperandoProdutos,
     error: errorRecuperarProdutos,
-  } = useQuery({
-    queryKey: ["produtos"],
-    queryFn: () => recuperarProdutos(),
-    staleTime: 15000,
-  });
+  } = useRecuperarProdutos();
 
   if (recuperandoProdutos)
     return <h5 className="text-xl"> Recuperando produtos...</h5>;
