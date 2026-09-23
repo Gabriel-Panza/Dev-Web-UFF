@@ -14,11 +14,10 @@ const recuperarProdutoPorId = async (id: number): Promise<Produto> => {
   return response.json();
 };
 
-const useRecuperarProdutoPorId = (id: number, habilitado = true) => {
+const useRecuperarProdutoPorId = (id: number) => {
   return useQuery({
     queryKey: ["produtos", id],
     queryFn: () => recuperarProdutoPorId(id),
-    enabled: habilitado,
     staleTime: 15000,
   });
 };

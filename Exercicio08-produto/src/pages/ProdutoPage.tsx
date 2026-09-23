@@ -4,20 +4,12 @@ import useRecuperarProdutoPorId from "../hooks/useRecuperarProdutoPorId";
 
 const ProdutoPage = () => {
   const { id } = useParams();
-  const idProduto = Number(id);
-  const idValido = Boolean(
-    id && Number.isInteger(idProduto) && idProduto > 0,
-  );
 
   const {
     data: produto,
     isPending: recuperandoProduto,
     error: errorRecuperarProduto,
-  } = useRecuperarProdutoPorId(idProduto, idValido);
-
-  if (!idValido) {
-    throw new Error("O identificador do produto é inválido.");
-  }
+  } = useRecuperarProdutoPorId(+id!);
 
   if (recuperandoProduto) {
     return <h5 className="text-xl">Recuperando produto...</h5>;
@@ -37,11 +29,7 @@ const ProdutoPage = () => {
           {/* Para chegar nessa página o URL foi /produtos/:id */}
           {/* Sem a / abaixo seria enviada uma requisição para /produtos/abacate.png */}
           <div className="flex justify-center">
-            <img
-              src={"/" + produto.imagem}
-              alt={produto.nome}
-              width="210"
-            />
+            <img src={"/" + produto.imagem} alt={produto.nome} width="210" />
           </div>
         </div>
 
