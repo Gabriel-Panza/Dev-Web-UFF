@@ -7,6 +7,7 @@ D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosr
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\dto\ProdutoComCategoriaResumo.java
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\dto\ProdutoDto.java
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\dto\ProdutoSemCategoriaResumo.java
+D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\dto\ResultadoPaginado.java
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\exception\EntidadeNaoEncontradaException.java
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\exception\ErrorResponse.java
 D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful\src\main\java\com\carlosribeiro\apirestful\exception\GlobalExceptionHandler.java

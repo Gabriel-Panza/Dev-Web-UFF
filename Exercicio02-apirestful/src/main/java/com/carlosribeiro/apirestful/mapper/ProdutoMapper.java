@@ -9,7 +9,7 @@ import com.carlosribeiro.apirestful.dto.ProdutoComCategoriaResumo;
 import com.carlosribeiro.apirestful.dto.ProdutoSemCategoriaResumo;
 import com.carlosribeiro.apirestful.model.Produto;
 
-@Mapper(componentModel = "spring", uses = {CategoriaMapper.class})
+@Mapper(componentModel = "spring")
 public interface ProdutoMapper {
     List<ProdutoComCategoriaResumo> toProdutosComCategoriaResumo(List<Produto> produtos);
     @Mapping(target = "categoriaResumo", source = "categoria")
