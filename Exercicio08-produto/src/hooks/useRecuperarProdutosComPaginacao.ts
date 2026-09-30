@@ -1,13 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { Produto } from "../interfaces/Produto";
 import type { ResultadoPaginado } from "../interfaces/ResultadoPaginado";
 
 const recuperarProdutosComPaginacao = async (
-  pagina: number,
-  tamanho: number,
+  queryString: Record<string, string>,
 ): Promise<ResultadoPaginado<Produto>> => {
+  const num = await new Promise<number>((resolve) => {
+    setTimeout(() => {
+      resolve(1);
+    }, 0);
+  });
+  console.log(num);
   const response = await fetch(
-    "/api/produtos/paginacao?pagina=" + pagina + "&tamanho=" + tamanho,
+    "/api/produtos/paginacao?" + new URLSearchParams(queryString),
   );
   if (!response.ok) {
     throw new Error(
@@ -18,11 +23,14 @@ const recuperarProdutosComPaginacao = async (
   return response.json();
 };
 
-const useRecuperarProdutosComPaginacao = (pagina: number, tamanho: number) => {
+const useRecuperarProdutosComPaginacao = (
+  queryString: Record<string, string>,
+) => {
   return useQuery({
-    queryKey: ["produtos", "paginacao", pagina, tamanho],
-    queryFn: () => recuperarProdutosComPaginacao(pagina, tamanho),
+    queryKey: ["produtos", "paginacao", queryString],
+    queryFn: () => recuperarProdutosComPaginacao(queryString),
     staleTime: 0,
+    placeholderData: keepPreviousData,
   });
 };
 

@@ -79,10 +79,11 @@ public class ProdutoController {
     @GetMapping("paginacao") // Consulta sql de produto com left join categoria com limit 5 e offset 10
     public ResultadoPaginado<Produto> recuperarProdutosComPaginacao(
         @RequestParam(name = "pagina", defaultValue = "0") int pagina,
-        @RequestParam(name = "tamanho", defaultValue = "5") int tamanho
+        @RequestParam(name = "tamanho", defaultValue = "5") int tamanho,
+        @RequestParam(name = "nome", defaultValue = "") String nome
     ) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);
-        Page<Produto> page = produtoService.recuperarProdutosComPaginacao(pageRequest);
+        Page<Produto> page = produtoService.recuperarProdutosComPaginacao(pageRequest, nome);
         return new ResultadoPaginado<>(page.getTotalElements(), page.getTotalPages(), page.getNumber(), page.getContent());
     }
     

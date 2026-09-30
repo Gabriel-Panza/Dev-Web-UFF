@@ -5,7 +5,6 @@ import FavoritosPage from "../pages/FavoritosPage";
 import HomePage from "../pages/HomePage";
 import CadastrarProdutoPage from "../pages/CadastrarProdutoPage";
 import LoginPage from "../pages/LoginPage";
-import ProdutosPage from "../pages/ProdutosPage";
 import ErrorPage from "../pages/ErrorPage";
 import ProdutoPage from "../pages/ProdutoPage";
 import ProdutosComPaginacaoPage from "../pages/ProdutosComPaginacaoPage";

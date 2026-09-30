@@ -82,7 +82,7 @@ public class ProdutoService {
         return produtoMapper.toProdutosSemCategoriaResumo(produtos);
     }
 
-    public Page<Produto> recuperarProdutosComPaginacao(PageRequest pageRequest) {
-        return produtoRepository.recuperarProdutosComPaginacao(pageRequest);    
+    public Page<Produto> recuperarProdutosComPaginacao(PageRequest pageRequest, String nome) {
+        return produtoRepository.recuperarProdutosComPaginacao(pageRequest, "%" + nome + "%");    
     }
 }
