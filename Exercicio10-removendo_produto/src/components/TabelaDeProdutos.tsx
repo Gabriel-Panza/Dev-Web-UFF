@@ -90,8 +90,20 @@ const TabelaDeProdutos = ({ produtos, onRemover, idRemovendo }: Props) => {
                     onClick={() => onRemover(produto.id)}
                     disabled={idRemovendo !== undefined}
                   >
-                    <img className="me-1" src={iconDelete} />
-                    {idRemovendo === produto.id ? "Removendo..." : "Remover"}
+                    {idRemovendo === produto.id ? (
+                      <>
+                        <span
+                          className="me-1 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                          aria-hidden="true"
+                        />
+                        Removendo...
+                      </>
+                    ) : (
+                      <>
+                        <img className="me-1" src={iconDelete} />
+                        Remover
+                      </>
+                    )}
                   </button>
                 </div>
               </td>
