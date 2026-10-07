@@ -1,5 +1,11 @@
 import debounce from "lodash/debounce";
-import { useEffect, useMemo, useRef, type ChangeEvent, type FormEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 
 interface Props {
   onPesquisar: (nome: string) => void;
@@ -8,7 +14,7 @@ interface Props {
 const Pesquisa = ({ onPesquisar }: Props) => {
   const nomeRef = useRef<HTMLInputElement>(null);
   const pesquisarComAtraso = useMemo(
-    () => debounce((nome: string) => onPesquisar(nome.trim()), 500),
+    () => debounce((nome: string) => onPesquisar(nome.trim()), 1100),
     [onPesquisar],
   );
 
