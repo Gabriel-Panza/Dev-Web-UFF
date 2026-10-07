@@ -39,6 +39,7 @@ Nos projetos React, execute `npm install` uma vez antes de usar `npm run dev`. O
 | 08 | Página de produto | Não | Exercício 02 em execução |
 | 09 | Pesquisa e paginação | Não | Exercício 02 em execução |
 | 10 | Remoção de produto | Não | Exercício 02 em execução |
+| 11 | Remoção otimista sem paginação | Não | Exercício 02 em execução |
 
 ## Preparação do MySQL
 
@@ -178,9 +179,21 @@ npm run dev
 
 O botão **Remover** envia uma requisição `DELETE` para a API. Portanto, o MySQL, o Exercício 02 e o Exercício 10 precisam permanecer ativos durante o teste.
 
+## Exercício 11 — remoção otimista sem paginação
+
+Requer o Exercício 02 em execução:
+
+```powershell
+cd .\Exercicio11-removendo_produto_otimista-incompleto
+npm install
+npm run dev
+```
+
+Esta versão lista os produtos sem paginação e utiliza o proxy do Vite para encaminhar `/api` à API disponível em `http://localhost:8080`.
+
 ## Como executar frontend e backend juntos
 
-Para os exercícios 06 a 10, use dois terminais.
+Para os exercícios 06 a 11, use dois terminais.
 
 Terminal 1 — banco e API:
 
