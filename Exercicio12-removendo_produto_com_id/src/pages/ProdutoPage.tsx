@@ -14,10 +14,11 @@ const ProdutoPage = () => {
 
   const tratarRemocao = () => {
     removerProduto(+id!, {
-      onSuccess: () => navigate("/listar-produtos", {
-        replace: true,
-        state: { produtoRemovido: produto?.nome },
-      }),
+      onSuccess: () =>
+        navigate("/listar-produtos", {
+          replace: true,
+          state: { produtoRemovido: produto?.nome },
+        }),
     });
   };
 
@@ -40,17 +41,22 @@ const ProdutoPage = () => {
       <h1 className="mb-1 text-xl font-semibold">Página de Produto</h1>
       <hr className="mb-4" />
 
-      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-12">
-        <div className="md:col-span-4 lg:col-span-3">
+      <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-12">
+        <div className="md:col-span-4">
           {/* Para chegar nessa página o URL foi /produtos/:id */}
           {/* Sem a / abaixo seria enviada uma requisição para /produtos/abacate.png */}
           <div className="flex justify-center">
-            <img src={"/" + produto.imagem} alt={produto.nome} width="210" />
+            <img
+              className="h-auto w-[280px] max-w-full object-contain"
+              src={"/" + produto.imagem}
+              alt={produto.nome}
+              width="280"
+            />
           </div>
         </div>
 
-        <div className="md:col-span-8 lg:col-span-5">
-          <div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2">
+        <div className="min-w-0 md:col-span-8">
+          <div className="grid max-w-2xl grid-cols-[max-content_minmax(0,1fr)] gap-x-4 gap-y-2">
             <div className="font-semibold">Categoria</div>
             <div>{produto.categoria.nome}</div>
 
@@ -77,31 +83,33 @@ const ProdutoPage = () => {
             <div className="font-semibold">Disponível</div>
             <div>{produto.disponivel ? "Sim" : "Não"}</div>
           </div>
-        </div>
-
-        <div className="md:col-span-6 lg:col-span-2">
-          <button className="btn-success w-full py-1" type="button" disabled={removendoProduto}>
-            Editar
-          </button>
-        </div>
-
-        <div className="md:col-span-6 lg:col-span-2">
-          <button
-            className="btn-danger flex w-full items-center justify-center py-1"
-            type="button"
-            onClick={tratarRemocao}
-            disabled={removendoProduto}
-          >
-            {removendoProduto ? (
-              <>
-                <span
-                  className="me-1 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                  aria-hidden="true"
-                />
-                Removendo...
-              </>
-            ) : "Remover"}
-          </button>
+          <div className="mt-4 grid max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              className="btn-success w-full px-4 py-2"
+              type="button"
+              disabled={removendoProduto}
+            >
+              Editar
+            </button>
+            <button
+              className="btn-danger flex w-full items-center justify-center px-4 py-2"
+              type="button"
+              onClick={tratarRemocao}
+              disabled={removendoProduto}
+            >
+              {removendoProduto ? (
+                <>
+                  <span
+                    className="me-1 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                    aria-hidden="true"
+                  />
+                  Removendo...
+                </>
+              ) : (
+                "Remover"
+              )}
+            </button>
+          </div>
           {errorRemoverProduto && (
             <p className="mt-2 text-red-700" role="alert">
               {errorRemoverProduto.message}
