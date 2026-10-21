@@ -20,6 +20,10 @@
     <properties>
         <java.version>25</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <m2e.apt.activation>jdt_apt</m2e.apt.activation>
+        <classes.outputDirectory>${project.build.directory}/classes</classes.outputDirectory>
+        <test.outputDirectory>${project.build.directory}/test-classes</test.outputDirectory>
     </properties>
 
     <dependencies>
@@ -55,19 +59,35 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
+        <outputDirectory>${classes.outputDirectory}</outputDirectory>
+        <testOutputDirectory>${test.outputDirectory}</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <proc>full</proc>
+                    <compilerArgs>
+                        <arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
+                    </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -83,4 +103,33 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- O m2e do VS Code/Eclipse informa essa propriedade ao importar o projeto. -->
+        <profile>
+            <id>ide</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <properties>
+                <classes.outputDirectory>${project.build.directory}/ide-classes</classes.outputDirectory>
+                <test.outputDirectory>${project.build.directory}/ide-test-classes</test.outputDirectory>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <!-- A IDE não escreve nos MapperImpl gerados pelo Maven do terminal. -->
+                            <generatedSourcesDirectory>${project.build.directory}/generated-sources/ide-annotations</generatedSourcesDirectory>
+                            <generatedTestSourcesDirectory>${project.build.directory}/generated-test-sources/ide-annotations</generatedTestSourcesDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

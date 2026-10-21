@@ -27,9 +27,25 @@ const useRemoverProduto = () => {
   return useMutation({
     mutationFn: (id: number) => removerProdutoPorId(id),
     onMutate: (id: number) => setIdRemovendo(id),
+    onSuccess: async (_data, id) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["produtos", id],
+        exact: true,
+        refetchType: "none",
+      });
+
+      queryClient.removeQueries({
+        queryKey: ["produtos", id],
+        exact: true,
+        type: "inactive",
+      });
+    },
     onSettled: async () => {
       try {
-        await queryClient.invalidateQueries({ queryKey: ["produtos"] });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["produtos"], exact: true }),
+          queryClient.invalidateQueries({ queryKey: ["produtos", "paginacao"] }),
+        ]);
       } finally {
         setIdRemovendo(null);
       }

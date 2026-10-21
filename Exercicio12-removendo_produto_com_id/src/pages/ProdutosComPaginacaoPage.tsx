@@ -70,7 +70,9 @@ const ProdutosComPaginacaoPage = () => {
       onSuccess: () => {
         setProdutoRemovido(nomeProduto);
         if (deveVoltarUmaPagina) {
-          setPagina((paginaAtual) => paginaAtual - 1);
+          setPagina((paginaAtual) =>
+            paginaAtual === pagina ? Math.max(0, paginaAtual - 1) : paginaAtual,
+          );
         }
       },
     });

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.constraints.Min;
 
 @CrossOrigin("http://localhost:5173")
 @RestController
@@ -78,8 +79,8 @@ public class ProdutoController {
     // http://localhost:8080/produtos/paginacao?pagina=0&tamanho=5
     @GetMapping("paginacao") // Consulta sql de produto com left join categoria com limit 5 e offset 10
     public ResultadoPaginado<Produto> recuperarProdutosComPaginacao(
-        @RequestParam(name = "pagina", defaultValue = "0") int pagina,
-        @RequestParam(name = "tamanho", defaultValue = "5") int tamanho,
+        @RequestParam(name = "pagina", defaultValue = "0") @Min(0) int pagina,
+        @RequestParam(name = "tamanho", defaultValue = "5") @Min(1) int tamanho,
         @RequestParam(name = "nome", defaultValue = "") String nome
     ) {
         PageRequest pageRequest = PageRequest.of(pagina, tamanho);

@@ -40,6 +40,10 @@ Nos projetos React, execute `npm install` uma vez antes de usar `npm run dev`. O
 | 09 | Pesquisa e paginação | Não | Exercício 02 em execução |
 | 10 | Remoção de produto | Não | Exercício 02 em execução |
 | 11 | Remoção otimista sem paginação | Não | Exercício 02 em execução |
+| 12 | Remoção pela página de produto | Não | Exercício 02 em execução |
+| 13 | Estado compartilhado com Zustand | Não | Exercício 02 em execução |
+
+Os exercícios 14 e 15 estão em preparação e ainda não fazem parte das verificações abaixo.
 
 ## Preparação do MySQL
 
@@ -77,13 +81,21 @@ cd .\Exercicio02-apirestful
 & "$env:MAVEN_HOME\bin\mvn.cmd" clean spring-boot:run
 ```
 
-A configuração padrão usa `spring.jpa.hibernate.ddl-auto=create`: as tabelas são recriadas e os dados anteriores são apagados sempre que a aplicação inicia. Para forçar o MySQL local e preservar os dados entre execuções, use:
+A configuração padrão usa `spring.jpa.hibernate.ddl-auto=update`, preservando os dados entre execuções. Para forçar o MySQL local, use:
 
 ```powershell
 & "$env:MAVEN_HOME\bin\mvn.cmd" clean spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb --spring.jpa.hibernate.ddl-auto=update"
 ```
 
-Quando aparecer a mensagem `Started ApirestfulApplication`, a API estará disponível em `http://localhost:8080`. Mantenha esse terminal aberto ao executar os exercícios 06 a 10.
+Quando aparecer a mensagem `Started ApirestfulApplication`, a API estará disponível em `http://localhost:8080`. Mantenha esse terminal aberto ao executar os exercícios 06 a 13.
+
+Para **apagar as tabelas atuais e reinserir os produtos iniciais**, pare a API com `Ctrl+C` e execute explicitamente:
+
+```powershell
+& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb --spring.jpa.hibernate.ddl-auto=create"
+```
+
+Esse comando é destrutivo: use apenas para reiniciar os dados dos exercícios. O Exercício 01 e o Exercício 02 usam modelos diferentes da tabela `produto`; não aplique o script SQL do 01 ao banco que está usando com a API.
 
 ## Exercício 03 — introdução ao React
 
@@ -193,7 +205,7 @@ Esta versão lista os produtos sem paginação e utiliza o proxy do Vite para en
 
 ## Como executar frontend e backend juntos
 
-Para os exercícios 06 a 11, use dois terminais.
+Para os exercícios 06 a 13, use dois terminais.
 
 Terminal 1 — banco e API:
 
@@ -215,6 +227,21 @@ Para encerrar qualquer aplicação iniciada no terminal, pressione `Ctrl+C`.
 
 ## Comandos de validação
 
+A partir da raiz, valide os Exercícios 01 a 13 com:
+
+```powershell
+.\scripts\verificar-exercicios.ps1
+```
+
+Para conferir somente uma parte:
+
+```powershell
+.\scripts\verificar-exercicios.ps1 -SomenteJava
+.\scripts\verificar-exercicios.ps1 -SomenteFrontend
+```
+
+O script usa uma lista explícita de pastas e não executa comandos nos exercícios 14 e 15. Os testes da API usam H2 em memória e não apagam nem alteram o MySQL. As dependências npm precisam estar instaladas em cada frontend.
+
 Para validar um projeto React sem iniciar o servidor de desenvolvimento:
 
 ```powershell
@@ -227,3 +254,20 @@ Para validar os projetos Maven:
 ```powershell
 & "$env:MAVEN_HOME\bin\mvn.cmd" clean compile
 ```
+
+## Geração dos mappers no Exercício 02
+
+Os arquivos `ProdutoMapperImpl.java` e `CategoriaMapperImpl.java` são gerados pelo MapStruct. Altere os arquivos de `src/main/java`, nunca os arquivos de `target`.
+
+A configuração separa a saída do terminal da saída do editor:
+
+| Compilador | Classes | Mappers gerados |
+| --- | --- | --- |
+| Maven no terminal | `target/classes` | `target/generated-sources/annotations` |
+| VS Code/Eclipse (m2e) | `target/ide-classes` | `target/generated-sources/ide-annotations` |
+
+Isso evita que o editor sobrescreva um `MapperImpl` enquanto o Maven está lendo o mesmo arquivo. O processamento de Lombok inclui `lombok-mapstruct-binding`, como orienta a [documentação do MapStruct](https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok).
+
+Depois de atualizar esta configuração no VS Code, execute **Java: Clean Java Language Server Workspace** na paleta de comandos e permita que o editor reimporte o projeto. Essa limpeza é para descartar os caminhos antigos da IDE; os próximos builds usarão as pastas separadas automaticamente.
+
+A pasta `target` não é versionada. Se ela não existir após clonar o repositório, execute `mvn clean test` ou o script de validação para gerar novamente os mappers e classes.

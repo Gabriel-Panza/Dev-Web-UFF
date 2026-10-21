@@ -22,6 +22,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
-*.xml
-!pom.xml
-!**/pom.xml
+# Resultados de compilação e dependências são recriados a partir dos fontes.
+**/target/
+**/node_modules/
+**/dist/
+**/.apt_generated/
+**/.apt_generated_tests/
+**/*.tsbuildinfo
+
+# Metadados locais dos editores (não ocultar os XML de configuração do projeto).
+**/.classpath
+**/.project
+**/.factorypath
+**/.settings/

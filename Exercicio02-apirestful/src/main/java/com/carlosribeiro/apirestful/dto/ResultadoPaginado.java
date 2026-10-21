@@ -4,6 +4,6 @@ import java.util.List;
 
 public record ResultadoPaginado<T>(Long totalDeItens,
                                 int totalDePaginas,
-                                int PaginaCorrente,
+                                int paginaCorrente,
                                 List<T> itens)
 {}

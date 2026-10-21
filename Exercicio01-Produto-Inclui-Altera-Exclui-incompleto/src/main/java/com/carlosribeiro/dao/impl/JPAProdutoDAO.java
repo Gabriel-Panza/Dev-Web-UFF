@@ -92,7 +92,7 @@ public class JPAProdutoDAO implements ProdutoDAO
 
 			if (produto == null) {
 				tx.rollback();
-				throw new RuntimeException(
+				throw new ProdutoNaoEncontradoException(
 					"Produto com id = " + umProduto.getId() + " não encontrado."
 				);
 			}
