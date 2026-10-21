@@ -42,8 +42,47 @@ Nos projetos React, execute `npm install` uma vez antes de usar `npm run dev`. O
 | 11 | Remoção otimista sem paginação | Não | Exercício 02 em execução |
 | 12 | Remoção pela página de produto | Não | Exercício 02 em execução |
 | 13 | Estado compartilhado com Zustand | Não | Exercício 02 em execução |
+| 14 | Nova API REST com login didático | Não | MySQL e banco `desweb` |
+| 15 | Zustand com a nova API | Não | Exercício 14 em execução |
 
-Os exercícios 14 e 15 estão em preparação e ainda não fazem parte das verificações abaixo.
+Os exercícios 02 e 14 usam a porta `8080`: execute apenas um deles por vez. O frontend 15 deve ser usado com o backend 14.
+
+## Exercícios 14 e 15
+
+Terminal do backend, a partir da raiz:
+
+```powershell
+cd .\Exercicio14-apirestfulv2
+& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run
+```
+
+O backend tenta primeiro o MySQL da UFF e usa o local como fallback. Para forçar o local:
+
+```powershell
+& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb"
+```
+
+Em outro terminal, a partir da raiz:
+
+```powershell
+cd .\Exercicio15-zustand-com-nova-api
+npm install
+npm run dev
+```
+
+O proxy `/api` encaminha as chamadas para `http://localhost:8080`. A tela de login do frontend ainda é um placeholder; não foi implementado um fluxo de autenticação novo. O endpoint didático é `POST /autenticacao/login`.
+
+Para validar os dois projetos, a partir da raiz:
+
+```powershell
+& "$env:MAVEN_HOME\bin\mvn.cmd" -f .\Exercicio14-apirestfulv2\pom.xml clean test
+npm --prefix .\Exercicio15-zustand-com-nova-api run build
+npm --prefix .\Exercicio15-zustand-com-nova-api run lint
+```
+
+Os testes do 14 usam H2 em memória, sem alterar o MySQL. O backend usa `ddl-auto=update` e não duplica a carga inicial ao reiniciar. Para recriar as tabelas, é necessário passar explicitamente `--spring.jpa.hibernate.ddl-auto=create` (isso apaga os dados existentes).
+
+No 14, os mappers da IDE ficam em `target/generated-sources/ide-annotations` e as classes em `target/ide-classes`, separados do Maven do terminal. Após a reimportação do projeto, use **Java: Clean Java Language Server Workspace** se o VS Code mantiver erros antigos.
 
 ## Preparação do MySQL
 

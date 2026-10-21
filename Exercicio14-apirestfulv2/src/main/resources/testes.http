@@ -1,0 +1,71 @@
+### GET para /produtos
+GET http://localhost:8080/produtos
+
+### GET para /produtos/resumo
+GET http://localhost:8080/produtos/resumo?comCategoria=false
+
+### GET para /produtos/mapstruct
+GET http://localhost:8080/produtos/mapstruct?comCategoria=true
+
+### GET para /categorias/mapstruct/2
+GET http://localhost:8080/categorias/mapstruct/99
+
+### GET para /produtos/paginacao?pagina=0&tamanho=5
+GET http://localhost:8080/produtos/paginacao?pagina=1&tamanho=5
+
+### GET para /produtos/paginacao?pagina=0&tamanho=5&nome=cereja
+GET http://localhost:8080/produtos/paginacao?pagina=0&tamanho=5&nome=ab
+
+### POST
+POST http://localhost:8080/produtos
+Content-Type: application/json
+{
+  "imagem": "abacaxi.png",
+  "nome": "Abacaxi",
+  "descricao": "1 unidade aprox. 750g",
+  "disponivel": true,
+  "qtdEstoque": 100,
+  "preco": 2.45,
+  "dataCadastro": "2025-04-26",
+  "categoria": {
+    "nome": "Fruta",
+    "id": 1
+  }
+}
+
+### PUT
+PUT http://localhost:8080/produtos
+Content-Type: application/json
+
+{
+  "imagem": "abacateeeeeeeeeeee.png",
+  "nome": "Abacate",
+  "descricao": "1 unidade aprox. 750g",
+  "disponivel": true,
+  "qtdEstoque": 100,
+  "preco": 2.45,
+  "dataCadastro": "2025-04-26",
+  "categoria": {
+    "nome": "Fruta",
+    "id": 1
+  },
+  "id": 1
+}
+
+### GET para /produtos/1
+GET http://localhost:8080/produtos/1
+
+### GET para /categorias/1?comProdutos=false
+GET http://localhost:8080/categorias/2
+
+### DELETE para /produtos/1
+DELETE http://localhost:8080/produtos/1
+
+### POST para /autenticacao/login
+POST http://localhost:8080/autenticacao/login
+Content-Type: application/json
+
+{
+  "conta": "admin",
+  "senha": "desweb"
+}
