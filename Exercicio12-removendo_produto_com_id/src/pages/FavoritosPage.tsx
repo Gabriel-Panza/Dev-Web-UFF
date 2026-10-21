@@ -1,6 +1,4 @@
 const FavoritosPage = () => {
-  return (
-    <div>FavoritosPage</div>
-  )
-}
-export default FavoritosPage
+  return <div>FavoritosPage</div>;
+};
+export default FavoritosPage;

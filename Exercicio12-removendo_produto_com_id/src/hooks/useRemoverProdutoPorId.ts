@@ -37,10 +37,10 @@ const useRemoverProdutoPorId = () => {
         type: "inactive",
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: ["produtos"],
-        predicate: (query) => typeof query.queryKey[1] !== "number",
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["produtos"], exact: true }),
+        queryClient.invalidateQueries({ queryKey: ["produtos", "paginacao"] }),
+      ]);
     },
   });
 };

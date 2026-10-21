@@ -1,11 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import TabelaDeProdutos from "../components/TabelaDeProdutos";
 import useRecuperarProdutos from "../hooks/useRecuperarProdutos";
 import useRemoverProdutoPorId from "../hooks/useRemoverProdutoPorId";
 
 const ProdutosPage = () => {
-  const queryClient = useQueryClient();
   const [produtoRemovido, setProdutoRemovido] = useState("");
 
   useEffect(() => {
@@ -27,13 +25,13 @@ const ProdutosPage = () => {
     error: errorRemoverProduto,
   } = useRemoverProdutoPorId();
 
-  const remover = (id: number) => {
-    const nomeProduto = produtos?.find((produto) => produto.id === id)?.nome ?? "";
+  const tratarRemocao = (id: number) => {
+    const nomeProduto =
+      produtos?.find((produto) => produto.id === id)?.nome ?? "";
     setProdutoRemovido("");
     removerProduto(id, {
-      onSuccess: async () => {
+      onSuccess: () => {
         setProdutoRemovido(nomeProduto);
-        await queryClient.invalidateQueries({ queryKey: ["produtos"] });
       },
     });
   };
@@ -45,7 +43,10 @@ const ProdutosPage = () => {
   return (
     <>
       {produtoRemovido && (
-        <div className="mb-3 rounded-lg border-2 border-yellow-400 bg-yellow-200 px-4 py-3 font-semibold text-yellow-950" role="status">
+        <div
+          className="mb-3 rounded-lg border-2 border-yellow-400 bg-yellow-200 px-4 py-3 font-semibold text-yellow-950"
+          role="status"
+        >
           Produto {produtoRemovido} foi removido com sucesso
         </div>
       )}
@@ -53,7 +54,7 @@ const ProdutosPage = () => {
       <hr className="mb-4" />
       <TabelaDeProdutos
         produtos={produtos}
-        onRemover={remover}
+        onRemover={tratarRemocao}
         idRemovendo={removendoProduto ? idRemovendo : undefined}
       />
     </>

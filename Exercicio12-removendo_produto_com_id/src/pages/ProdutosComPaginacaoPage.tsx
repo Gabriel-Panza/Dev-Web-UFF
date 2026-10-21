@@ -1,13 +1,12 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Pesquisa from "../components/Pesquisa";
+import Paginacao from "../components/Paginacao";
 import TabelaDeProdutos from "../components/TabelaDeProdutos";
 import useRecuperarProdutosComPaginacao from "../hooks/useRecuperarProdutosComPaginacao";
 import useRemoverProdutoPorId from "../hooks/useRemoverProdutoPorId";
 
 const ProdutosComPaginacaoPage = () => {
-  const queryClient = useQueryClient();
   const location = useLocation();
   const [produtoRemovido, setProdutoRemovido] = useState<string>(() =>
     typeof location.state?.produtoRemovido === "string"
@@ -56,23 +55,23 @@ const ProdutosComPaginacaoPage = () => {
 
   const produtos = resultadoPaginado.itens;
   const totalDePaginas = resultadoPaginado.totalDePaginas;
-  const pages = Array.from({ length: totalDePaginas }, (_, index) => index);
-  const remover = (id: number) => {
-    const nomeProduto = produtos.find((produto) => produto.id === id)?.nome ?? "";
+  const tratarPaginacao = (pagina: number) => {
+    setPagina(pagina);
+  };
+
+  const tratarRemocao = (id: number) => {
+    const nomeProduto =
+      produtos.find((produto) => produto.id === id)?.nome ?? "";
     const deveVoltarUmaPagina = produtos.length === 1 && pagina > 0;
 
     setProdutoRemovido("");
 
     removerProduto(id, {
-      onSuccess: async () => {
+      onSuccess: () => {
         setProdutoRemovido(nomeProduto);
         if (deveVoltarUmaPagina) {
           setPagina((paginaAtual) => paginaAtual - 1);
         }
-
-        await queryClient.invalidateQueries({
-          queryKey: ["produtos", "paginacao"],
-        });
       },
     });
   };
@@ -80,7 +79,10 @@ const ProdutosComPaginacaoPage = () => {
   return (
     <>
       {produtoRemovido && (
-        <div className="mb-3 rounded-lg border-2 border-yellow-400 bg-yellow-200 px-4 py-3 font-semibold text-yellow-950" role="status">
+        <div
+          className="mb-3 rounded-lg border-2 border-yellow-400 bg-yellow-200 px-4 py-3 font-semibold text-yellow-950"
+          role="status"
+        >
           Produto {produtoRemovido} foi removido com sucesso
         </div>
       )}
@@ -89,65 +91,15 @@ const ProdutosComPaginacaoPage = () => {
       <Pesquisa onPesquisar={pesquisarProduto} />
       <TabelaDeProdutos
         produtos={produtos}
-        onRemover={remover}
+        onRemover={tratarRemocao}
         idRemovendo={removendoProduto ? idRemovendo : undefined}
       />
 
-      {totalDePaginas > 1 && (
-        <nav className="my-4" aria-label="Paginação">
-          <ul className="flex">
-          <li>
-            <button
-              type="button"
-              className={
-                "rounded-l-lg border border-gray-300 px-4 py-2 font-semibold hover:bg-gray-200 " +
-                (pagina === 0
-                  ? "cursor-not-allowed bg-gray-300 opacity-50"
-                  : "cursor-pointer bg-white text-green-700")
-              }
-              onClick={() => setPagina(pagina - 1)}
-              disabled={pagina === 0}
-            >
-              Anterior
-            </button>
-          </li>
-
-          {pages.map((page) => (
-            <li key={page}>
-              <button
-                type="button"
-                className={
-                  "cursor-pointer border px-4 py-2 font-semibold " +
-                  (pagina === page
-                    ? "border-green-800 bg-green-700 text-white"
-                    : "border-gray-300 bg-white text-green-600 hover:bg-gray-100")
-                }
-                onClick={() => setPagina(page)}
-                aria-current={pagina === page ? "page" : undefined}
-              >
-                {page + 1}
-              </button>
-            </li>
-          ))}
-
-          <li>
-            <button
-              type="button"
-              className={
-                "rounded-r-lg border border-gray-300 px-4 py-2 font-semibold hover:bg-gray-200 " +
-                (pagina === totalDePaginas - 1
-                  ? "cursor-not-allowed bg-gray-300 opacity-50"
-                  : "cursor-pointer bg-white text-green-700")
-              }
-              onClick={() => setPagina(pagina + 1)}
-              disabled={pagina === totalDePaginas - 1}
-            >
-              Próxima
-            </button>
-          </li>
-          </ul>
-        </nav>
-      )}
+      <Paginacao
+        pagina={pagina}
+        totalDePaginas={totalDePaginas}
+        tratarPaginacao={tratarPaginacao}
+      />
     </>
   );
 };

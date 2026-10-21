@@ -13,17 +13,23 @@ const ProdutosPage = () => {
     removerProduto(id);
   };
 
-  const { mutate: removerProduto } = useRemoverProdutoPorId();
+  const { mutate: removerProduto, isPending: removendoProduto } =
+    useRemoverProdutoPorId();
 
   if (errorRecuperarProdutos) throw errorRecuperarProdutos;
 
-  if (recuperandoProdutos) return <p className="text-lg">Recuperando produtos...</p>;
+  if (recuperandoProdutos)
+    return <p className="text-lg">Recuperando produtos...</p>;
 
   return (
     <>
       <h1 className="mb-1 text-xl font-semibold">Lista de Produtos</h1>
       <hr className="mb-4" />
-      <TabelaDeProdutos produtos={produtos} tratarRemocao={tratarRemocao} />
+      <TabelaDeProdutos
+        produtos={produtos}
+        tratarRemocao={tratarRemocao}
+        removendo={removendoProduto}
+      />
     </>
   );
 };

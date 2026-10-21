@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const removerProduto = async (id: number): Promise<void> => {
   await new Promise<void>((resolve) => {
@@ -11,15 +11,19 @@ const removerProduto = async (id: number): Promise<void> => {
 
   if (!response.ok) {
     throw new Error(
-      "Ocorreu um erro ao remover o produto. Status Code = " +
-        response.status,
+      "Ocorreu um erro ao remover o produto. Status Code = " + response.status,
     );
   }
 };
 
 const useRemoverProduto = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (id: number) => removerProduto(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["produtos"] });
+    },
   });
 };
 

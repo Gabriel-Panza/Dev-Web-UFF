@@ -6,10 +6,10 @@ import formatarData from "../util/formatarData";
 interface Props {
   produtos: Produto[];
   tratarRemocao: (id: number) => void;
-  // removendo: boolean;
+  removendo: boolean;
 }
 
-const TabelaDeProdutos = ({ produtos, tratarRemocao }: Props) => {
+const TabelaDeProdutos = ({ produtos, tratarRemocao, removendo }: Props) => {
   return (
     <div className="mb-3">
       <table className="w-full border-2 border-gray-400">
@@ -66,7 +66,12 @@ const TabelaDeProdutos = ({ produtos, tratarRemocao }: Props) => {
                 {produto.categoria.nome}
               </td>
               <td className="w-[20%] border-r border-r-gray-200 py-1 ps-2">
-                <Link className="text-green-700 font-semibold" to={"/produtos/" + produto.id}>{produto.nome}</Link>
+                <Link
+                  className="font-semibold text-green-700"
+                  to={"/produtos/" + produto.id}
+                >
+                  {produto.nome}
+                </Link>
               </td>
               <td className="w-[13%] border-r border-r-gray-200 py-1 text-center">
                 {produto.disponivel ? "Sim" : "Não"}
@@ -85,7 +90,7 @@ const TabelaDeProdutos = ({ produtos, tratarRemocao }: Props) => {
                 <div className="flex justify-center">
                   <button
                     onClick={() => tratarRemocao(produto.id)}
-                    // disabled={removendo}
+                    disabled={removendo}
                     className="btn-danger flex items-center px-4 py-1"
                     type="button"
                   >

@@ -55,7 +55,11 @@ const TabelaDeProdutos = ({ produtos, onRemover, idRemovendo }: Props) => {
               </td>
               <td className="w-[10%] border-r border-r-gray-200 py-1 text-center">
                 <div className="flex justify-center">
-                  <img src={`/${produto.imagem}`} alt={produto.nome} width="40" />
+                  <img
+                    src={`/${produto.imagem}`}
+                    alt={produto.nome}
+                    width="40"
+                  />
                 </div>
               </td>
               <td className="w-[13%] border-r border-r-gray-200 py-1 text-center">

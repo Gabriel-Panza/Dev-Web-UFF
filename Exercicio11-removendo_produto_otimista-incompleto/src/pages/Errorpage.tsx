@@ -10,8 +10,8 @@ const ErrorPage = () => {
         <h1 className="mb-1 text-xl font-semibold">Página de Erro</h1>
         <hr className="mb-4" />
         {isRouteErrorResponse(error)
-            ? "Página requisitada inválida"
-            : error instanceof Error
+          ? "Página requisitada inválida"
+          : error instanceof Error
             ? error.message
             : "Erro desconhecido: " + error}
       </div>

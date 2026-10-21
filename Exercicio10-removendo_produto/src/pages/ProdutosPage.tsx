@@ -1,10 +1,8 @@
-import { useQueryClient } from "@tanstack/react-query";
 import TabelaDeProdutos from "../components/TabelaDeProdutos";
 import useRecuperarProdutos from "../hooks/useRecuperarProdutos";
 import useRemoverProduto from "../hooks/useRemoverProduto";
 
 const ProdutosPage = () => {
-  const queryClient = useQueryClient();
   const {
     data: produtos,
     isPending: recuperandoProdutos,
@@ -17,12 +15,8 @@ const ProdutosPage = () => {
     error: errorRemoverProduto,
   } = useRemoverProduto();
 
-  const remover = (id: number) => {
-    removerProduto(id, {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["produtos"] });
-      },
-    });
+  const tratarRemocao = (id: number) => {
+    removerProduto(id);
   };
 
   if (recuperandoProdutos)
@@ -35,7 +29,7 @@ const ProdutosPage = () => {
       <hr className="mb-4" />
       <TabelaDeProdutos
         produtos={produtos}
-        onRemover={remover}
+        onRemover={tratarRemocao}
         idRemovendo={removendoProduto ? idRemovendo : undefined}
       />
     </>

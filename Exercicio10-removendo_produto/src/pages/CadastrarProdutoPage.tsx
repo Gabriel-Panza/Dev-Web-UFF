@@ -1,6 +1,4 @@
 const CadastrarProdutoPage = () => {
-  return (
-    <div>CadastrarProdutoPage</div>
-  )
-}
-export default CadastrarProdutoPage
+  return <div>CadastrarProdutoPage</div>;
+};
+export default CadastrarProdutoPage;

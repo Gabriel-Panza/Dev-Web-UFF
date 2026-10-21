@@ -1,9 +1,5 @@
 import debounce from "lodash/debounce";
-import {
-  useEffect,
-  useMemo,
-  type ChangeEvent,
-} from "react";
+import { useEffect, useMemo, type ChangeEvent } from "react";
 
 interface Props {
   onPesquisar: (nome: string) => void;
@@ -24,13 +20,13 @@ const Pesquisa = ({ onPesquisar }: Props) => {
   };
 
   return (
-      <input
-        className="mb-4 block w-full rounded-lg border border-gray-500 px-3 py-2"
-        type="search"
-        placeholder="Informe o nome do produto..."
-        aria-label="Nome do produto"
-        onChange={alterarNome}
-      />
+    <input
+      className="mb-4 block w-full rounded-lg border border-gray-500 px-3 py-2"
+      type="search"
+      placeholder="Informe o nome do produto..."
+      aria-label="Nome do produto"
+      onChange={alterarNome}
+    />
   );
 };
 

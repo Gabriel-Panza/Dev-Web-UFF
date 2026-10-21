@@ -5,7 +5,10 @@ const recuperarProdutoPorId = async (id: number) => {
   const response = await fetch(URL_PRODUTOS + "/" + id);
   if (!response.ok) {
     throw new Error(
-      "Ocorreu um erro ao recuperar o produto com id = " + id + ". Status code = " + response.status,
+      "Ocorreu um erro ao recuperar o produto com id = " +
+        id +
+        ". Status code = " +
+        response.status,
     );
   }
   return response.json();
