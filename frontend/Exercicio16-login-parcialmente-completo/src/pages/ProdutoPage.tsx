@@ -3,8 +3,13 @@ import useRecuperarProdutoPorId from "../hooks/useRecuperarProdutosPorId";
 import dayjs from "dayjs";
 import useRemoverProduto from "../hooks/useRemoverProduto";
 import { useState } from "react";
+import useTokenStore from "../store/TokenStore";
+import ehAdministrador from "../util/ehAdministrador";
 
 const ProdutoPage = () => {
+  const administrador = useTokenStore((state) =>
+    ehAdministrador(state.tokenResponse),
+  );
   const [removido, setRemovido] = useState(false);
 
   const { id } = useParams();
@@ -16,6 +21,7 @@ const ProdutoPage = () => {
   } = useRemoverProduto();
 
   const tratarRemocao = (id: number) => {
+    if (!administrador) return;
     removerProduto(id, { onSuccess: () => setRemovido(true) });
   };
   const {
@@ -105,25 +111,29 @@ const ProdutoPage = () => {
             </div>
           </div>
         </div>
-        <div className="col-span-4 me-4 xl:col-span-3">
-          <button
-            disabled={removido || removendoProduto}
-            className="btn-success w-full py-1"
-            type="button"
-          >
-            Editar
-          </button>
-        </div>
-        <div className="col-span-4 me-4 xl:col-span-3">
-          <button
-            disabled={removido || removendoProduto}
-            onClick={() => tratarRemocao(produto.id)}
-            className="btn-danger w-full py-1"
-            type="button"
-          >
-            {removendoProduto ? "Removendo..." : "Remover"}
-          </button>
-        </div>
+        {administrador && (
+          <>
+            <div className="col-span-4 me-4 xl:col-span-3">
+              <button
+                disabled={removido || removendoProduto}
+                className="btn-success w-full py-1"
+                type="button"
+              >
+                Editar
+              </button>
+            </div>
+            <div className="col-span-4 me-4 xl:col-span-3">
+              <button
+                disabled={removido || removendoProduto}
+                onClick={() => tratarRemocao(produto.id)}
+                className="btn-danger w-full py-1"
+                type="button"
+              >
+                {removendoProduto ? "Removendo..." : "Remover"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

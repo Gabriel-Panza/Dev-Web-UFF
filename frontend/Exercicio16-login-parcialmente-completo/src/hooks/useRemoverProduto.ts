@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useProdutoStore from "../store/ProdutoStore";
+import useTokenStore from "../store/TokenStore";
+import ehAdministrador from "../util/ehAdministrador";
 
 const removerProdutoPorId = async (id: number): Promise<void> => {
   await new Promise<void>((resolve) => {
@@ -7,6 +9,9 @@ const removerProdutoPorId = async (id: number): Promise<void> => {
       resolve();
     }, 1000);
   });
+  if (!ehAdministrador(useTokenStore.getState().tokenResponse)) {
+    throw new Error("Somente administradores podem remover produtos.");
+  }
   const response = await fetch("/api/produtos/" + id, {
     method: "DELETE",
   });
@@ -43,8 +48,13 @@ const useRemoverProduto = () => {
     onSettled: async () => {
       try {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["produtos"], exact: true }),
-          queryClient.invalidateQueries({ queryKey: ["produtos", "paginacao"] }),
+          queryClient.invalidateQueries({
+            queryKey: ["produtos"],
+            exact: true,
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["produtos", "paginacao"],
+          }),
         ]);
       } finally {
         setIdRemovendo(null);

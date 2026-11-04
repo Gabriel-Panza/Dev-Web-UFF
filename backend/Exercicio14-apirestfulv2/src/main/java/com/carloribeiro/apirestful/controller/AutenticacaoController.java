@@ -19,8 +19,9 @@ public class AutenticacaoController {
         Usuario usuarioLogado = autenticacaoService.login(usuario);
         if (usuarioLogado != null) {
             // O token continua didático: o ID convertido para texto, não um JWT.
+            String role = "admin".equals(usuarioLogado.getConta()) ? "ADMIN" : "USER";
             return new TokenResponse(usuarioLogado.getId().toString(),
-                usuarioLogado.getId(), usuarioLogado.getConta(), "");
+                usuarioLogado.getId(), usuarioLogado.getConta(), role);
         } else {
             return new TokenResponse("", 0, "", "");
         }

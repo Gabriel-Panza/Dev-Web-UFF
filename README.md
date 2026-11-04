@@ -68,7 +68,7 @@ Abra o endereço informado pelo Vite, normalmente `http://localhost:5173`. O `np
 
 O proxy do Vite encaminha `/api` para a API na porta 8080. Para testar o login, acesse `/login`. A carga inicial do backend cria as contas didáticas `admin` e `user`, ambas com senha `desweb`, caso elas ainda não existam.
 
-O login do 16 segue o roteiro com React Hook Form, `useEfetuarLogin`, `TokenStore` e `LoginStore`. O backend retorna `token`, `idUsuario`, `nome` e `role`. O token ainda é didático (ID convertido para texto), o nome usa a conta e o role fica vazio. Não há JWT nem proteção dos endpoints. Os stores são somente em memória; recarregar a página exige novo login. Cadastro e recuperação de senha são links ilustrativos.
+O login do 16 segue o roteiro com React Hook Form, `useEfetuarLogin`, `TokenStore` e `LoginStore`. O backend retorna `token`, `idUsuario`, `nome` e `role`. A conta autenticada `admin` recebe `ADMIN`; as demais recebem `USER`. Na entrada `/`, usuários logados vão para `/home` e visitantes para `/login`. As páginas comuns continuam públicas. `PrivateRoutes` permite favoritos e detalhes de produto a qualquer logado, mas reserva o cadastro de produto ao admin. Os botões Editar e Remover também aparecem somente para o admin. Visitantes que tentam abrir páginas privadas vão ao login; usuários comuns tentando cadastrar vão à home. O token ainda é didático (ID convertido para texto) e o nome usa a conta. Não há JWT nem autorização dos endpoints no servidor: essa restrição protege apenas a navegação e as ações da interface. Os stores são somente em memória; recarregar a página exige novo login. Cadastro e recuperação de senha são links ilustrativos.
 
 Para usar o frontend 15, mantenha esse mesmo backend e troque apenas a pasta do terminal 2:
 

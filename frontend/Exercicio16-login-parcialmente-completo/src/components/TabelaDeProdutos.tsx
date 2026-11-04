@@ -4,8 +4,17 @@ import formatarData from "../util/formatarData";
 import useProdutoStore from "../store/ProdutoStore";
 import useRecuperarProdutosComPaginacao from "../hooks/useRecuperarProdutosComPaginacao";
 import useRemoverProduto from "../hooks/useRemoverProduto";
+import useTokenStore from "../store/TokenStore";
+import ehAdministrador from "../util/ehAdministrador";
+import estaAutenticado from "../util/estaAutenticado";
 
 const TabelaDeProdutos = () => {
+  const autenticado = useTokenStore((state) =>
+    estaAutenticado(state.tokenResponse),
+  );
+  const administrador = useTokenStore((state) =>
+    ehAdministrador(state.tokenResponse),
+  );
   const idRemovendo = useProdutoStore((state) => state.idRemovendo);
   const {
     data: resultadoPaginado,
@@ -20,7 +29,7 @@ const TabelaDeProdutos = () => {
   const setPagina = useProdutoStore((state) => state.setPagina);
 
   const tratarRemocao = (id: number) => {
-    if (usandoProdutosAnteriores) return;
+    if (!administrador || usandoProdutosAnteriores) return;
 
     const paginaDaRemocao = pagina;
     const nomeDaRemocao = nome;
@@ -74,9 +83,11 @@ const TabelaDeProdutos = () => {
             <th className="border-r border-r-gray-200 p-1.5 text-center font-semibold">
               Preço
             </th>
-            <th className="border-r border-r-gray-200 p-1.5 text-center font-semibold">
-              Ação
-            </th>
+            {administrador && (
+              <th className="border-r border-r-gray-200 p-1.5 text-center font-semibold">
+                Ação
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -104,12 +115,16 @@ const TabelaDeProdutos = () => {
                 {produto.categoria.nome}
               </td>
               <td className="w-[20%] border-r border-r-gray-200 py-1 ps-2">
-                <Link
-                  className="font-semibold text-green-700"
-                  to={"/produtos/" + produto.id}
-                >
-                  {produto.nome}
-                </Link>
+                {autenticado ? (
+                  <Link
+                    className="font-semibold text-green-700"
+                    to={"/produtos/" + produto.id}
+                  >
+                    {produto.nome}
+                  </Link>
+                ) : (
+                  produto.nome
+                )}
               </td>
               <td className="w-[13%] border-r border-r-gray-200 py-1 text-center">
                 {produto.disponivel ? "Sim" : "Não"}
@@ -124,33 +139,37 @@ const TabelaDeProdutos = () => {
                   useGrouping: true,
                 })}
               </td>
-              <td className="w-[13%] border-r border-r-gray-200 py-1">
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => tratarRemocao(produto.id)}
-                    disabled={idRemovendo !== null || usandoProdutosAnteriores}
-                    className="btn-danger flex items-center px-4 py-1"
-                    type="button"
-                  >
-                    {idRemovendo === produto.id ? (
-                      <>
-                        <span
-                          className={
-                            "h-4 w-4 animate-spin rounded-full border-2 " +
-                            "me-1 border-t-transparent"
-                          }
-                        ></span>
-                        Removendo...
-                      </>
-                    ) : (
-                      <>
-                        <img className="me-1" src={iconDelete} />
-                        Remover
-                      </>
-                    )}
-                  </button>
-                </div>
-              </td>
+              {administrador && (
+                <td className="w-[13%] border-r border-r-gray-200 py-1">
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => tratarRemocao(produto.id)}
+                      disabled={
+                        idRemovendo !== null || usandoProdutosAnteriores
+                      }
+                      className="btn-danger flex items-center px-4 py-1"
+                      type="button"
+                    >
+                      {idRemovendo === produto.id ? (
+                        <>
+                          <span
+                            className={
+                              "h-4 w-4 animate-spin rounded-full border-2 " +
+                              "me-1 border-t-transparent"
+                            }
+                          ></span>
+                          Removendo...
+                        </>
+                      ) : (
+                        <>
+                          <img className="me-1" src={iconDelete} />
+                          Remover
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

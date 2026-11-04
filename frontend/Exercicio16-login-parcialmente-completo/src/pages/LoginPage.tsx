@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import useEfetuarLogin from "../hooks/useEfetuarLogin";
 import useTokenStore from "../store/TokenStore";
 import useLoginStore from "../store/LoginStore";
+import estaAutenticado from "../util/estaAutenticado";
+import recuperarDestinoLogin from "../util/recuperarDestinoLogin";
 
 interface LoginForm {
   email: string;
@@ -27,7 +29,8 @@ const LoginPage = () => {
   const setTokenResponse = useTokenStore((state) => state.setTokenResponse);
   const msg = useLoginStore((state) => state.msg);
   const setMsg = useLoginStore((state) => state.setMsg);
-  const navigate = useNavigate();
+  const location = useLocation();
+  const paginaDestino = recuperarDestinoLogin(location.state);
 
   const limparMensagem = () => {
     setLoginInvalido(false);
@@ -42,13 +45,12 @@ const LoginPage = () => {
       { email: dados.email.trim(), senha: dados.senha },
       {
         onSuccess: (resposta) => {
-          if (!resposta.token || resposta.idUsuario === 0) {
+          if (!estaAutenticado(resposta)) {
             setLoginInvalido(true);
             setMsg("Login inválido.");
             return;
           }
           setTokenResponse(resposta);
-          navigate("/home", { replace: true });
         },
         onError: (error) => setMsg(error.message),
       },
@@ -56,8 +58,8 @@ const LoginPage = () => {
     resetField("senha");
   };
 
-  if (tokenResponse.token && tokenResponse.idUsuario > 0)
-    return <Navigate to="/home" replace />;
+  if (estaAutenticado(tokenResponse))
+    return <Navigate to={paginaDestino} replace />;
 
   return (
     <>

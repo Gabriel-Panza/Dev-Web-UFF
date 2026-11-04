@@ -71,7 +71,10 @@ class ApirestfulApplicationTests {
         assertThat(resposta.token()).isEqualTo(Long.toString(resposta.idUsuario()));
         assertThat(resposta.idUsuario()).isPositive();
         assertThat(resposta.nome()).isEqualTo("admin");
-        assertThat(resposta.role()).isEmpty();
+        assertThat(resposta.role()).isEqualTo("ADMIN");
+        var usuarioComum = autenticacaoController.login(new Usuario("user", "desweb"));
+        assertThat(usuarioComum.idUsuario()).isPositive();
+        assertThat(usuarioComum.role()).isEqualTo("USER");
         var invalida = autenticacaoController.login(new Usuario("admin", "incorreta"));
         assertThat(invalida.token()).isEmpty();
         assertThat(invalida.idUsuario()).isZero();
@@ -117,12 +120,12 @@ class ApirestfulApplicationTests {
                 }
                 assertThat(conexao.getResponseCode()).isEqualTo(200);
                 var resposta = new String(conexao.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                assertThat(resposta).contains("\"token\":\"", "\"idUsuario\":", "\"nome\":\"", "\"role\":\"\"");
+                assertThat(resposta).contains("\"token\":\"", "\"idUsuario\":", "\"nome\":\"", "\"role\":\"");
                 assertThat(resposta).doesNotContain("senha");
                 if (senha.equals("desweb")) {
-                    assertThat(resposta).contains("\"nome\":\"admin\"");
+                    assertThat(resposta).contains("\"nome\":\"admin\"", "\"role\":\"ADMIN\"");
                 } else {
-                    assertThat(resposta).contains("\"token\":\"\"", "\"idUsuario\":0");
+                    assertThat(resposta).contains("\"token\":\"\"", "\"idUsuario\":0", "\"role\":\"\"");
                 }
             } finally {
                 conexao.disconnect();

@@ -8,7 +8,19 @@ O hook `useEfetuarLogin` usa uma mutation do React Query, `TokenStore` guarda a 
 
 Se a carga inicial não foi alterada, informe `admin` (ou `user`) no campo E-mail e `desweb` na senha. O backend ainda não cadastra e-mails reais, por isso o campo aceita esses identificadores sem exigir o formato `nome@dominio`.
 
-Este backend ainda não implementa JWT, sessão autenticada ou autorização dos endpoints. O token é o ID convertido em texto; `nome` usa a conta e `role` fica vazio porque o modelo atual não possui esses metadados. O login identifica o usuário na interface, mas não protege as operações da API. Os links de recuperação de senha e cadastro são placeholders do roteiro.
+Este backend ainda não implementa JWT, sessão autenticada ou autorização dos endpoints. O token é o ID convertido em texto e `nome` usa a conta. O backend atribui `role: "ADMIN"` à conta autenticada `admin` e `"USER"` às demais. Os links de recuperação de senha e cadastro são placeholders do roteiro.
+
+Na entrada `/`, `DefaultRoute` redireciona usuários logados para `/home` e visitantes para `/login`. Ao sair, o usuário também volta para o login. As páginas comuns (`/home`, `/carrinho` e `/listar-produtos`) continuam públicas quando acessadas diretamente.
+
+Quando um visitante tenta uma página privada, `PrivateRoutes` usa `<Navigate to="/login" state={{ from: location }} replace />` para guardar a localização anterior. Após o login, a página usa `<Navigate />` para voltar ao caminho tentado, incluindo query string e fragmento. Login direto, sem uma página anterior válida, leva a `/home`. O destino deve ser interno e as permissões continuam valendo: um `USER` que tentou cadastrar um produto será redirecionado à home pelo grupo exclusivo de admin. O retorno fica no estado do histórico, não em um store persistente.
+
+Ao clicar em Sair, a navbar também guarda a localização atual em `state.from` antes de abrir o login. Assim, sair de `/listar-produtos` e entrar novamente retorna à listagem. A mesma regra vale para páginas privadas: o novo usuário precisa ter permissão para a página guardada; caso contrário, `PrivateRoutes` o redireciona para a home.
+
+`PrivateRoutes` usa `Outlet` e agrupa em `children` as rotas `/favoritos` e `/produtos/:id`, disponíveis para qualquer usuário logado, inclusive `USER`. O grupo interno com `apenasAdmin` restringe `/cadastrar-produto` ao `ADMIN`. Visitantes vão para `/login`; usuários comuns tentando cadastrar vão para `/home`, inclusive ao digitar a URL diretamente.
+
+A navbar mostra Favoritos para todos os logados e Cad. Produto apenas ao admin. A tabela permite abrir detalhes para qualquer logado, mas só mostra a coluna de ações e o botão Remover ao admin. Os botões Editar e Remover na página de produto também são exclusivos do admin. O hook de remoção confere o perfil novamente antes de enviar o DELETE, inclusive se o usuário sair durante a espera.
+
+Essas restrições são somente de navegação no frontend; não protegem as operações da API contra chamadas HTTP diretas. É necessário implementar autorização no servidor para segurança real.
 
 Validação: `npm run build` e `npm run lint`.
 

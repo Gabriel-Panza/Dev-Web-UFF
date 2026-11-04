@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Layout from "./Layout";
 import CarrinhoPage from "../pages/CarrinhoPage";
 import FavoritosPage from "../pages/FavoritosPage";
@@ -8,6 +8,8 @@ import LoginPage from "../pages/LoginPage";
 import ErrorPage from "../pages/Errorpage";
 import ProdutoPage from "../pages/ProdutoPage";
 import ProdutosComPaginacaoPage from "../pages/ProdutosComPaginacaoPage";
+import PrivateRoutes from "./PrivateRoutes";
+import DefaultRoute from "./DefaultRoute";
 
 const router = createBrowserRouter([
   {
@@ -15,20 +17,25 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      // A linha abaixo define a rota “índice” (a rota padrão) dentro do grupo de rotas
-      // filhas do caminho /. Ou seja, quando o usuário acessa exatamente /, ela redireciona
-      // automaticamente para /home.
-      // - index: true marca essa rota como a padrão do pai.
-      // - <Navigate to="/home" replace /> faz o redirecionamento.
-      // - replace troca a entrada no histórico (o usuário não volta para / ao apertar “voltar”).
-      { index: true, element: <Navigate to="/home" replace /> },
+      // A rota índice escolhe home para logados e login para visitantes.
+      { index: true, element: <DefaultRoute /> },
       { path: "home", element: <HomePage /> },
       { path: "carrinho", element: <CarrinhoPage /> },
-      { path: "favoritos", element: <FavoritosPage /> },
       // {path: "listar-produtos", element: <ProdutosPage />},
       { path: "listar-produtos", element: <ProdutosComPaginacaoPage /> },
-      { path: "produtos/:id", element: <ProdutoPage /> },
-      { path: "cadastrar-produto", element: <CadastrarProdutoPage /> },
+      {
+        element: <PrivateRoutes />,
+        children: [
+          { path: "favoritos", element: <FavoritosPage /> },
+          { path: "produtos/:id", element: <ProdutoPage /> },
+          {
+            element: <PrivateRoutes apenasAdmin />,
+            children: [
+              { path: "cadastrar-produto", element: <CadastrarProdutoPage /> },
+            ],
+          },
+        ],
+      },
       { path: "login", element: <LoginPage /> },
       // A página de erro já faz isso
       {
