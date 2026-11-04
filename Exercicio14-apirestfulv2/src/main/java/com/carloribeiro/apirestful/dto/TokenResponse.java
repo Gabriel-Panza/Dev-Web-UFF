@@ -1,5 +1,5 @@
 package com.carloribeiro.apirestful.dto;
 
-public record TokenResponse(long token) {
+public record TokenResponse(String token, long idUsuario, String nome, String role) {
 }
 

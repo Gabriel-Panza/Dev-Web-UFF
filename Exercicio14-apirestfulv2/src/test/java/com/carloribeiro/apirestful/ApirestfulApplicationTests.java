@@ -68,8 +68,15 @@ class ApirestfulApplicationTests {
     @Test
     void deveAutenticarSomenteCredenciaisValidas() {
         var resposta = autenticacaoController.login(new Usuario("admin", "desweb"));
-        assertThat(resposta.token()).isPositive();
-        assertThat(autenticacaoController.login(new Usuario("admin", "incorreta")).token()).isZero();
+        assertThat(resposta.token()).isEqualTo(Long.toString(resposta.idUsuario()));
+        assertThat(resposta.idUsuario()).isPositive();
+        assertThat(resposta.nome()).isEqualTo("admin");
+        assertThat(resposta.role()).isEmpty();
+        var invalida = autenticacaoController.login(new Usuario("admin", "incorreta"));
+        assertThat(invalida.token()).isEmpty();
+        assertThat(invalida.idUsuario()).isZero();
+        assertThat(invalida.nome()).isEmpty();
+        assertThat(invalida.role()).isEmpty();
     }
 
     @Test
@@ -90,6 +97,33 @@ class ApirestfulApplicationTests {
             var conexao = conectar("/produtos/paginacao?" + consulta);
             try {
                 assertThat(conexao.getResponseCode()).isEqualTo(400);
+            } finally {
+                conexao.disconnect();
+            }
+        }
+    }
+
+    @Test
+    void deveRetornarOsQuatroCamposNoLoginHttp() throws Exception {
+        for (String senha : new String[] {"desweb", "incorreta"}) {
+            var conexao = conectar("/autenticacao/login");
+            try {
+                conexao.setRequestMethod("POST");
+                conexao.setRequestProperty("Content-Type", "application/json");
+                conexao.setDoOutput(true);
+                try (var corpo = conexao.getOutputStream()) {
+                    corpo.write(("{\"conta\":\"admin\",\"senha\":\"" + senha + "\"}")
+                            .getBytes(StandardCharsets.UTF_8));
+                }
+                assertThat(conexao.getResponseCode()).isEqualTo(200);
+                var resposta = new String(conexao.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+                assertThat(resposta).contains("\"token\":\"", "\"idUsuario\":", "\"nome\":\"", "\"role\":\"\"");
+                assertThat(resposta).doesNotContain("senha");
+                if (senha.equals("desweb")) {
+                    assertThat(resposta).contains("\"nome\":\"admin\"");
+                } else {
+                    assertThat(resposta).contains("\"token\":\"\"", "\"idUsuario\":0");
+                }
             } finally {
                 conexao.disconnect();
             }
