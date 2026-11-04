@@ -10,7 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>Exercicio01-Produto-Inclui-Altera-Exclui-incompleto</module>
-        <module>Exercicio02-apirestful</module>
+        <module>backend/Exercicio01-Produto-Inclui-Altera-Exclui-incompleto</module>
+        <module>backend/Exercicio02-apirestful</module>
+        <module>backend/Exercicio14-apirestfulv2</module>
     </modules>
 </project>

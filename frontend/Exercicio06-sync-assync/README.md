@@ -1,6 +1,6 @@
 # Exercício 06 — tratamento de requisições
 
-As duas aplicações React mostram os produtos da API do `Exercicio02-apirestful`:
+As duas aplicações React mostram os produtos da API de `backend/Exercicio02-apirestful`. O frontend começa a usar essa API no exercício 06 e continua com ela até o 13. Os frontends 15 e 16 usam a nova API do exercício 14.
 
 - `fetch-then-then-catch`: usa `.then()` e `.catch()`.
 - `await-try-catch`: usa `async/await` e `try/catch`.
@@ -11,11 +11,11 @@ As duas aplicações React mostram os produtos da API do `Exercicio02-apirestful
 2. Estando em `Exercicio06-sync-assync`, inicie a API em um terminal:
 
    ```powershell
-   cd ..\Exercicio02-apirestful
-   mvn spring-boot:run "-Dspring-boot.run.arguments=--spring.jpa.hibernate.ddl-auto=update"
+   cd ..\..\backend\Exercicio02-apirestful
+   & "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run
    ```
 
-   O parâmetro `update` evita que a configuração padrão `create` recrie as tabelas e apague os dados durante o teste. A API deve responder em `http://localhost:8080/produtos`.
+   A configuração padrão `update` preserva as tabelas e os dados. A API deve responder em `http://localhost:8080/produtos`.
 
 3. Em outro terminal aberto em `Exercicio06-sync-assync`, escolha uma versão:
 

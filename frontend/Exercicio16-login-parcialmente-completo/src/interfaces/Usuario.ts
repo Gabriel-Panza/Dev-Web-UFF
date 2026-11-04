@@ -1,4 +1,4 @@
 export interface Usuario {
-  conta: string;
+  email: string;
   senha: string;
 }

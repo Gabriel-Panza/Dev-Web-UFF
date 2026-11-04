@@ -9,7 +9,8 @@ const efetuarLogin = async (usuario: Usuario): Promise<TokenResponse> => {
     response = await fetch("/api/autenticacao/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify(usuario),
+      // A interface usa email; o backend atual ainda chama esse campo de conta.
+      body: JSON.stringify({ conta: usuario.email, senha: usuario.senha }),
     });
   } catch {
     throw new Error(

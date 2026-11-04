@@ -2,11 +2,11 @@
 
 Execute o backend do exercício 14 na porta 8080 e este frontend com `npm install` e `npm run dev`. Abra `/login` pelo link Entrar.
 
-O formulário envia `POST /api/autenticacao/login` com `conta` e `senha`. O proxy do Vite encaminha a chamada para o backend. A resposta tem quatro campos: `token` (string), `idUsuario`, `nome` e `role`. Login inválido retorna token vazio e ID zero. Reinicie o backend 14 após atualizar esse contrato.
+O formulário usa `email` e `senha` no frontend. O hook envia `POST /api/autenticacao/login` traduzindo `email` para `conta`, como exige o backend atual. O proxy do Vite encaminha a chamada para o backend. A resposta tem quatro campos: `token` (string), `idUsuario`, `nome` e `role`. Login inválido retorna token vazio e ID zero. Reinicie o backend 14 após atualizar esse contrato.
 
 O hook `useEfetuarLogin` usa uma mutation do React Query, `TokenStore` guarda a resposta e `LoginStore` guarda a mensagem. O formulário usa React Hook Form, `register` e spread conforme o roteiro. O campo `email` do `LoginForm` representa a conta (não exige formato de e-mail). A navbar mostra o nome retornado e permite sair. O estado não é persistido: atualizar a página exige entrar novamente. Nenhuma senha é gravada nos stores ou no armazenamento do navegador.
 
-Se a carga inicial não foi alterada, as contas didáticas são `admin` e `user`, ambas com senha `desweb`.
+Se a carga inicial não foi alterada, informe `admin` (ou `user`) no campo E-mail e `desweb` na senha. O backend ainda não cadastra e-mails reais, por isso o campo aceita esses identificadores sem exigir o formato `nome@dominio`.
 
 Este backend ainda não implementa JWT, sessão autenticada ou autorização dos endpoints. O token é o ID convertido em texto; `nome` usa a conta e `role` fica vazio porque o modelo atual não possui esses metadados. O login identifica o usuário na interface, mas não protege as operações da API. Os links de recuperação de senha e cadastro são placeholders do roteiro.
 

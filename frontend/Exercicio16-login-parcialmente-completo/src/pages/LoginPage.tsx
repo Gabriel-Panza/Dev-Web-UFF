@@ -38,9 +38,8 @@ const LoginPage = () => {
   const tratarLogin = (dados: LoginForm) => {
     if (entrando) return;
     limparMensagem();
-    // O roteiro chama o campo de email; o backend recebe essa informação como conta.
     efetuarLogin(
-      { conta: dados.email.trim(), senha: dados.senha },
+      { email: dados.email.trim(), senha: dados.senha },
       {
         onSuccess: (resposta) => {
           if (!resposta.token || resposta.idUsuario === 0) {
@@ -66,7 +65,7 @@ const LoginPage = () => {
       <div className="mt-12 flex justify-center bg-white">
         <div className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-2xl duration-300">
           <h2 className="text-center text-2xl font-bold text-gray-800">
-            Informe sua Conta e Senha
+            Informe seu E-mail e Senha
           </h2>
           {loginInvalido && (
             <div
@@ -91,25 +90,30 @@ const LoginPage = () => {
           >
             <div>
               <label
-                htmlFor="conta"
+                htmlFor="email"
                 className="mb-1 block text-sm font-medium text-gray-700"
               >
-                Conta
+                E-mail
               </label>
               <input
                 {...register("email", {
-                  required: "Informe sua conta.",
-                  validate: (value) => !!value.trim() || "Informe sua conta.",
+                  required: "Informe seu e-mail.",
+                  validate: (value) => !!value.trim() || "Informe seu e-mail.",
                   onChange: limparMensagem,
                 })}
                 type="text"
-                placeholder="Informe sua conta"
-                id="conta"
+                placeholder="Informe seu e-mail"
+                id="email"
+                inputMode="email"
                 autoComplete="username"
                 disabled={entrando}
                 aria-invalid={!!errors.email}
+                aria-describedby="email-ajuda"
                 className="w-full rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-gray-900 outline-none hover:border-gray-500"
               />
+              <p id="email-ajuda" className="mt-1 text-sm text-gray-500">
+                O backend atual usa identificadores: para testar, informe admin.
+              </p>
               {errors.email && (
                 <p role="alert" className="mt-1 text-sm text-red-800">
                   {errors.email.message}

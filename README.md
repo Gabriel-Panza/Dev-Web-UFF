@@ -1,20 +1,40 @@
 # Exercícios de Desenvolvimento Web — UFF
 
-Este repositório reúne os exercícios Java, Spring Boot e React desenvolvidos durante a disciplina. Os comandos abaixo consideram o PowerShell aberto na raiz do repositório:
+Projetos da disciplina organizados em `backend/` (Java) e `frontend/` (React). Os números originais foram preservados para manter a correspondência com as atividades do professor.
 
-```powershell
-cd D:\Documents\GitHub\Dev-Web-UFF
+## Organização e evolução das APIs
+
+```text
+Dev-Web-UFF/
+├── backend/
+│   ├── Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/
+│   ├── Exercicio02-apirestful/
+│   └── Exercicio14-apirestfulv2/
+├── frontend/
+│   ├── Exercicio03-react/
+│   ├── ...
+│   ├── Exercicio15-zustand-com-nova-api/
+│   └── Exercicio16-login-parcialmente-completo/
+└── pom.xml
 ```
+
+| Frontend | Backend que deve estar rodando | O que muda |
+| --- | --- | --- |
+| Exercícios 03 a 05 | Nenhum | Interface e produtos locais |
+| Exercícios 06 a 13 | [Exercício 02](backend/Exercicio02-apirestful/) | **O consumo da primeira API começa no frontend 06** |
+| Exercícios 15 e 16 | [Exercício 14](backend/Exercicio14-apirestfulv2/) | **A troca de backend começa no frontend 15**; o 16 acrescenta o login |
+
+Os exercícios 02 e 14 são os números das atividades em que os backends foram criados, não dos únicos frontends que podem usá-los. O 14 não tem um frontend próprio neste repositório.
+
+O [Exercício 01](backend/Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/) fica junto dos projetos Java, mas é uma aplicação de console que acessa o banco diretamente: **não é um servidor HTTP e não deve ser iniciado para servir os frontends**.
 
 ## Pré-requisitos
 
-- Java 25;
-- Maven configurado na variável `MAVEN_HOME`;
-- Node.js 20.19 ou superior;
-- npm;
-- MySQL ou MariaDB na porta `3306` para os exercícios 01 e 02.
+- Java 25 e Maven disponível em `MAVEN_HOME` ou no `PATH`.
+- Node.js e npm compatíveis com a versão de Vite de cada projeto. Para usar todos os projetos recentes, prefira o Node 22.12 ou superior já instalado no ambiente.
+- MySQL/MariaDB ligado na porta 3306 e banco `desweb` existente.
 
-Para conferir as instalações:
+Confira o ambiente:
 
 ```powershell
 java -version
@@ -23,290 +43,158 @@ node -v
 npm -v
 ```
 
-Nos projetos React, execute `npm install` uma vez antes de usar `npm run dev`. O endereço normalmente será `http://localhost:5173`; caso a porta esteja ocupada, o Vite informará outra porta no terminal.
+Os comandos abaixo usam PowerShell e caminhos completos, portanto não dependem da pasta em que o terminal foi aberto. Se o repositório estiver em outro local, ajuste o prefixo `D:\Documents\GitHub\Dev-Web-UFF`.
 
-## Dependências entre os exercícios
+## Rodar o exercício 16 em dois terminais
 
-| Exercício | Tipo | Pode ser executado sozinho? | Dependência |
-| --- | --- | --- | --- |
-| 01 | Java/JPA no console | Não | MySQL e banco `desweb` |
-| 02 | API REST com Spring Boot | Não | MySQL e banco `desweb` |
-| 03 | React | Sim | Nenhuma API |
-| 04 | React, rotas e navbar | Sim | Nenhuma API |
-| 05 | React com produtos locais | Sim | Nenhuma API |
-| 06 | Duas versões React com `fetch` | Não | Exercício 02 em execução |
-| 07 | React Query | Não | Exercício 02 em execução |
-| 08 | Página de produto | Não | Exercício 02 em execução |
-| 09 | Pesquisa e paginação | Não | Exercício 02 em execução |
-| 10 | Remoção de produto | Não | Exercício 02 em execução |
-| 11 | Remoção otimista sem paginação | Não | Exercício 02 em execução |
-| 12 | Remoção pela página de produto | Não | Exercício 02 em execução |
-| 13 | Estado compartilhado com Zustand | Não | Exercício 02 em execução |
-| 14 | Nova API REST com login didático | Não | MySQL e banco `desweb` |
-| 15 | Zustand com a nova API | Não | Exercício 14 em execução |
-
-Os exercícios 02 e 14 usam a porta `8080`: execute apenas um deles por vez. O frontend 15 deve ser usado com o backend 14.
-
-## Exercícios 14 e 15
-
-Terminal do backend, a partir da raiz:
+### Terminal 1 — backend do exercício 14
 
 ```powershell
-cd .\Exercicio14-apirestfulv2
+cd D:\Documents\GitHub\Dev-Web-UFF\backend\Exercicio14-apirestfulv2
 & "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run
 ```
 
-O backend tenta primeiro o MySQL da UFF e usa o local como fallback. Para forçar o local:
+Aguarde aparecer `Started ApirestfulApplication`. A API estará em `http://localhost:8080`. Mantenha esse terminal aberto.
+
+### Terminal 2 — frontend do exercício 16
 
 ```powershell
-& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb"
-```
-
-Em outro terminal, a partir da raiz:
-
-```powershell
-cd .\Exercicio15-zustand-com-nova-api
+cd D:\Documents\GitHub\Dev-Web-UFF\frontend\Exercicio16-login-parcialmente-completo
 npm install
 npm run dev
 ```
 
-O proxy `/api` encaminha as chamadas para `http://localhost:8080`. A tela de login do frontend ainda é um placeholder; não foi implementado um fluxo de autenticação novo. O endpoint didático é `POST /autenticacao/login`.
+Abra o endereço informado pelo Vite, normalmente `http://localhost:5173`. O `npm install` é necessário na primeira execução e quando as dependências mudarem.
 
-Para validar os dois projetos, a partir da raiz:
+O proxy do Vite encaminha `/api` para a API na porta 8080. Para testar o login, acesse `/login`. A carga inicial do backend cria as contas didáticas `admin` e `user`, ambas com senha `desweb`, caso elas ainda não existam.
+
+O login do 16 segue o roteiro com React Hook Form, `useEfetuarLogin`, `TokenStore` e `LoginStore`. O backend retorna `token`, `idUsuario`, `nome` e `role`. O token ainda é didático (ID convertido para texto), o nome usa a conta e o role fica vazio. Não há JWT nem proteção dos endpoints. Os stores são somente em memória; recarregar a página exige novo login. Cadastro e recuperação de senha são links ilustrativos.
+
+Para usar o frontend 15, mantenha esse mesmo backend e troque apenas a pasta do terminal 2:
 
 ```powershell
-& "$env:MAVEN_HOME\bin\mvn.cmd" -f .\Exercicio14-apirestfulv2\pom.xml clean test
-npm --prefix .\Exercicio15-zustand-com-nova-api run build
-npm --prefix .\Exercicio15-zustand-com-nova-api run lint
+cd D:\Documents\GitHub\Dev-Web-UFF\frontend\Exercicio15-zustand-com-nova-api
+npm install
+npm run dev
 ```
 
-Os testes do 14 usam H2 em memória, sem alterar o MySQL. O backend usa `ddl-auto=update` e não duplica a carga inicial ao reiniciar. Para recriar as tabelas, é necessário passar explicitamente `--spring.jpa.hibernate.ddl-auto=create` (isso apaga os dados existentes).
+## Rodar os frontends 06 a 13 em dois terminais
 
-No 14, os mappers da IDE ficam em `target/generated-sources/ide-annotations` e as classes em `target/ide-classes`, separados do Maven do terminal. Após a reimportação do projeto, use **Java: Clean Java Language Server Workspace** se o VS Code mantiver erros antigos.
+### Terminal 1 — backend do exercício 02
 
-## Preparação do MySQL
+```powershell
+cd D:\Documents\GitHub\Dev-Web-UFF\backend\Exercicio02-apirestful
+& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run
+```
 
-Inicie o MySQL pelo painel do XAMPP ou pelo gerenciador usado na máquina. Depois, crie o banco caso ele ainda não exista:
+### Terminal 2 — frontend escolhido
+
+Exemplo com o exercício 09:
+
+```powershell
+cd D:\Documents\GitHub\Dev-Web-UFF\frontend\Exercicio09-pesquisa_produto
+npm install
+npm run dev
+```
+
+Para outro exercício, use a pasta correspondente na tabela abaixo. Não é necessário modificar imports nem o proxy para alternar entre as versões corretas.
+
+**Execute apenas um backend por vez:** os exercícios 02 e 14 usam a mesma porta 8080. Pare o anterior com `Ctrl+C` antes de trocar. Para encerrar o frontend, pressione `Ctrl+C` no outro terminal.
+
+## Pastas de cada frontend
+
+Depois de entrar na pasta escolhida, execute `npm install` e `npm run dev`.
+
+| Exercício | Pasta relativa à raiz | Dependência |
+| --- | --- | --- |
+| 03 — introdução ao React | `frontend/Exercicio03-react` | Nenhuma API |
+| 04 — navbar e rotas | `frontend/Exercicio04-navbar` | Nenhuma API |
+| 05 — produtos locais | `frontend/Exercicio05-produtos` | Nenhuma API |
+| 06 — async/await e try/catch | `frontend/Exercicio06-sync-assync/await-try-catch` | Backend 02 |
+| 06 — then/catch | `frontend/Exercicio06-sync-assync/fetch-then-then-catch` | Backend 02 |
+| 07 — React Query | `frontend/Exercicio07-react-query` | Backend 02 |
+| 08 — página de produto | `frontend/Exercicio08-produto` | Backend 02 |
+| 09 — pesquisa e paginação | `frontend/Exercicio09-pesquisa_produto` | Backend 02 |
+| 10 — remoção de produto | `frontend/Exercicio10-removendo_produto` | Backend 02 |
+| 11 — remoção otimista sem paginação | `frontend/Exercicio11-removendo_produto_otimista-incompleto` | Backend 02 |
+| 12 — remoção pela página de produto | `frontend/Exercicio12-removendo_produto_com_id` | Backend 02 |
+| 13 — estado compartilhado | `frontend/Exercicio13-zustand-incompleto` | Backend 02 |
+| 15 — Zustand com a nova API | `frontend/Exercicio15-zustand-com-nova-api` | Backend 14 |
+| 16 — login parcialmente completo | `frontend/Exercicio16-login-parcialmente-completo` | Backend 14 |
+
+Os exercícios 03 a 05 precisam somente do terminal do frontend. No 06, execute uma das duas subpastas; o diretório pai contém apenas a organização das versões.
+
+## Banco de dados
+
+Ligue o banco pelo gerenciador usado na máquina, por exemplo o painel do XAMPP. Se o banco `desweb` ainda não existir, crie-o com:
 
 ```powershell
 mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS desweb CHARACTER SET utf8mb4;"
 ```
 
-Se o usuário `root` local não tiver senha, remova `-p` do comando. As configurações dos exercícios 01 e 02 tentam acessar primeiro o servidor da UFF e usam o servidor local como alternativa.
+Se o root local não tiver senha, retire `-p`. Se `mysql` não estiver no PATH, use o caminho do executável instalado.
 
-## Exercício 01 — aplicação Java/JPA no console
-
-Esse exercício acessa o MySQL diretamente e não utiliza o Exercício 02. Antes da primeira execução, carregue a estrutura e os dados iniciais:
+Os backends 02 e 14 tentam acessar primeiro o servidor da UFF e usam localhost como fallback. Para forçar somente o local, execute o comando abaixo **dentro da pasta do backend escolhido**:
 
 ```powershell
-Get-Content -Raw .\Exercicio01-Produto-Inclui-Altera-Exclui-incompleto\script\Tabelas.sql | mysql -u root -p
+& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb"
 ```
 
-Em seguida, compile e execute a classe principal:
+As APIs usam `spring.jpa.hibernate.ddl-auto=update`, preservando os dados entre execuções. Como compartilham o banco `desweb`, as remoções feitas nos frontends também alteram os dados vistos pelas outras atividades.
 
-```powershell
-cd .\Exercicio01-Produto-Inclui-Altera-Exclui-incompleto
-& "$env:MAVEN_HOME\bin\mvn.cmd" compile exec:java "-Dexec.mainClass=com.carlosribeiro.Principal"
-```
-
-Use as opções exibidas no terminal para cadastrar, alterar, remover ou listar produtos.
-
-## Exercício 02 — API RESTful
-
-O MySQL precisa estar ativo e o banco `desweb` precisa existir. Para executar usando a configuração padrão:
-
-```powershell
-cd .\Exercicio02-apirestful
-& "$env:MAVEN_HOME\bin\mvn.cmd" clean spring-boot:run
-```
-
-A configuração padrão usa `spring.jpa.hibernate.ddl-auto=update`, preservando os dados entre execuções. Para forçar o MySQL local, use:
-
-```powershell
-& "$env:MAVEN_HOME\bin\mvn.cmd" clean spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb --spring.jpa.hibernate.ddl-auto=update"
-```
-
-Quando aparecer a mensagem `Started ApirestfulApplication`, a API estará disponível em `http://localhost:8080`. Mantenha esse terminal aberto ao executar os exercícios 06 a 13.
-
-Para **apagar as tabelas atuais e reinserir os produtos iniciais**, pare a API com `Ctrl+C` e execute explicitamente:
+Para **apagar e recriar as tabelas e a carga inicial**, pare a API e execute explicitamente, na pasta do backend escolhido:
 
 ```powershell
 & "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb --spring.jpa.hibernate.ddl-auto=create"
 ```
 
-Esse comando é destrutivo: use apenas para reiniciar os dados dos exercícios. O Exercício 01 e o Exercício 02 usam modelos diferentes da tabela `produto`; não aplique o script SQL do 01 ao banco que está usando com a API.
+Esse comando é destrutivo: não use para uma inicialização normal.
 
-## Exercício 03 — introdução ao React
+## Exercício 01 — Java/JPA no console
 
-Executa de forma independente:
-
-```powershell
-cd .\Exercicio03-react
-npm install
-npm run dev
-```
-
-## Exercício 04 — navbar e rotas
-
-Executa de forma independente:
+Não depende de nenhuma API e precisa somente do banco e de um terminal. Se necessário, prepare as tabelas com o script `backend/Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/script/Tabelas.sql`, depois execute:
 
 ```powershell
-cd .\Exercicio04-navbar
-npm install
-npm run dev
+cd D:\Documents\GitHub\Dev-Web-UFF\backend\Exercicio01-Produto-Inclui-Altera-Exclui-incompleto
+& "$env:MAVEN_HOME\bin\mvn.cmd" compile exec:java "-Dexec.mainClass=com.carlosribeiro.Principal"
 ```
 
-## Exercício 05 — lista local de produtos
+Use o menu do terminal para cadastrar, alterar, remover ou listar produtos.
 
-Executa de forma independente porque os produtos estão definidos no próprio frontend:
+**Atenção:** o exercício 01 usa um modelo diferente da tabela `produto`. Não aplique seu SQL ao mesmo banco que contém os dados das APIs sem antes separá-los ou fazer backup.
 
-```powershell
-cd .\Exercicio05-produtos
-npm install
-npm run dev
-```
+## Validação e mappers gerados
 
-## Exercício 06 — `fetch` com duas formas de tratamento
+O `pom.xml` da raiz agrega os três projetos de `backend/`. Os testes das APIs 02 e 14 usam H2 em memória e não alteram o MySQL.
 
-Primeiro, mantenha o Exercício 02 em execução. O Exercício 06 possui dois projetos React separados; execute apenas a versão que deseja testar.
-
-Versão com `.then()` e `.catch()`:
-
-```powershell
-cd .\Exercicio06-sync-assync\fetch-then-then-catch
-npm install
-npm run dev
-```
-
-Versão com `async/await` e `try/catch`:
-
-```powershell
-cd .\Exercicio06-sync-assync\await-try-catch
-npm install
-npm run dev
-```
-
-Se quiser comparar as duas versões simultaneamente, abra cada projeto em um terminal. O segundo Vite escolherá outra porta automaticamente.
-
-## Exercício 07 — React Query
-
-Requer o Exercício 02 em execução:
-
-```powershell
-cd .\Exercicio07-react-query
-npm install
-npm run dev
-```
-
-## Exercício 08 — página de produto
-
-Requer o Exercício 02 em execução:
-
-```powershell
-cd .\Exercicio08-produto
-npm install
-npm run dev
-```
-
-## Exercício 09 — pesquisa e paginação
-
-Requer o Exercício 02 em execução:
-
-```powershell
-cd .\Exercicio09-pesquisa_produto
-npm install
-npm run dev
-```
-
-## Exercício 10 — remoção de produto
-
-Requer o Exercício 02 em execução:
-
-```powershell
-cd .\Exercicio10-removendo_produto
-npm install
-npm run dev
-```
-
-O botão **Remover** envia uma requisição `DELETE` para a API. Portanto, o MySQL, o Exercício 02 e o Exercício 10 precisam permanecer ativos durante o teste.
-
-## Exercício 11 — remoção otimista sem paginação
-
-Requer o Exercício 02 em execução:
-
-```powershell
-cd .\Exercicio11-removendo_produto_otimista-incompleto
-npm install
-npm run dev
-```
-
-Esta versão lista os produtos sem paginação e utiliza o proxy do Vite para encaminhar `/api` à API disponível em `http://localhost:8080`.
-
-## Como executar frontend e backend juntos
-
-Para os exercícios 06 a 13, use dois terminais.
-
-Terminal 1 — banco e API:
-
-```powershell
-cd D:\Documents\GitHub\Dev-Web-UFF\Exercicio02-apirestful
-& "$env:MAVEN_HOME\bin\mvn.cmd" spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.url=jdbc:mysql://localhost:3306/desweb --spring.jpa.hibernate.ddl-auto=update"
-```
-
-Terminal 2 — frontend escolhido, por exemplo o Exercício 10:
-
-```powershell
-cd D:\Documents\GitHub\Dev-Web-UFF\Exercicio10-removendo_produto
-npm run dev
-```
-
-O Vite encaminha as chamadas iniciadas por `/api` para `http://localhost:8080`. Se a API não estiver ativa, as páginas que recuperam produtos apresentarão erro de conexão.
-
-Para encerrar qualquer aplicação iniciada no terminal, pressione `Ctrl+C`.
-
-## Comandos de validação
-
-A partir da raiz, valide os Exercícios 01 a 13 com:
+A partir da raiz:
 
 ```powershell
 .\scripts\verificar-exercicios.ps1
 ```
 
-Para conferir somente uma parte:
+Para validar só uma parte:
 
 ```powershell
 .\scripts\verificar-exercicios.ps1 -SomenteJava
 .\scripts\verificar-exercicios.ps1 -SomenteFrontend
 ```
 
-O script usa uma lista explícita de pastas e não executa comandos nos exercícios 14 e 15. Os testes da API usam H2 em memória e não apagam nem alteram o MySQL. As dependências npm precisam estar instaladas em cada frontend.
-
-Para validar um projeto React sem iniciar o servidor de desenvolvimento:
+Também é possível executar os testes Java manualmente:
 
 ```powershell
-npm run build
-npm run lint
+& "$env:MAVEN_HOME\bin\mvn.cmd" test
 ```
 
-Para validar os projetos Maven:
+Em cada frontend, os comandos de validação são `npm run build` e `npm run lint`. O script usa as dependências já instaladas; não instala pacotes nem inicia servidores.
 
-```powershell
-& "$env:MAVEN_HOME\bin\mvn.cmd" clean compile
-```
-
-## Geração dos mappers no Exercício 02
-
-Os arquivos `ProdutoMapperImpl.java` e `CategoriaMapperImpl.java` são gerados pelo MapStruct. Altere os arquivos de `src/main/java`, nunca os arquivos de `target`.
-
-A configuração separa a saída do terminal da saída do editor:
+Os `MapperImpl.java` dos backends 02 e 14 são gerados pelo MapStruct. Altere os arquivos de `src/main/java`, nunca os de `target`.
 
 | Compilador | Classes | Mappers gerados |
 | --- | --- | --- |
 | Maven no terminal | `target/classes` | `target/generated-sources/annotations` |
 | VS Code/Eclipse (m2e) | `target/ide-classes` | `target/generated-sources/ide-annotations` |
 
-Isso evita que o editor sobrescreva um `MapperImpl` enquanto o Maven está lendo o mesmo arquivo. O processamento de Lombok inclui `lombok-mapstruct-binding`, como orienta a [documentação do MapStruct](https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok).
+A separação evita sobrescritas entre a IDE e o Maven. O processamento de Lombok inclui `lombok-mapstruct-binding`, como orienta a [documentação do MapStruct](https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok).
 
-Depois de atualizar esta configuração no VS Code, execute **Java: Clean Java Language Server Workspace** na paleta de comandos e permita que o editor reimporte o projeto. Essa limpeza é para descartar os caminhos antigos da IDE; os próximos builds usarão as pastas separadas automaticamente.
-
-A pasta `target` não é versionada. Se ela não existir após clonar o repositório, execute `mvn clean test` ou o script de validação para gerar novamente os mappers e classes.
+Após mover as pastas, feche terminais abertos nos caminhos antigos e, se o VS Code mantiver erros de Java, execute **Java: Clean Java Language Server Workspace** na paleta de comandos. Classes, dependências, imagens e arquivos de configuração permanecem dentro de seus respectivos projetos. `target`, `node_modules` e `dist` não são versionados.
