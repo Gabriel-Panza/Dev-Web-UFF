@@ -2,7 +2,7 @@
 
 - **03 a 05:** independentes de backend.
 - **06 a 13:** execute `backend/Exercicio02-apirestful` no outro terminal.
-- **15 e 16:** execute `backend/Exercicio14-apirestfulv2` no outro terminal.
+- **15 a 17:** execute `backend/Exercicio14-apirestfulv2` no outro terminal.
 
 A primeira API passa a ser usada no exercício 06; a mudança de versão ocorre no exercício 15. Os números originais foram mantidos para acompanhar o material da disciplina.
 

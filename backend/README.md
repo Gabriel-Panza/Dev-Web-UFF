@@ -6,7 +6,7 @@ Os números originais das atividades foram preservados.
 | --- | --- |
 | [Exercício 01](Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/) | Java/JPA no console; não serve nenhum frontend |
 | [Exercício 02](Exercicio02-apirestful/) | Primeira API, usada pelos frontends **06 a 13** |
-| [Exercício 14](Exercicio14-apirestfulv2/) | Nova API, usada pelos frontends **15 e 16**, com login didático no 16 |
+| [Exercício 14](Exercicio14-apirestfulv2/) | Nova API, usada pelos frontends **15 a 17**, com login didático no 16 e cadastro/alteração no 17 |
 
 A integração com uma API começa no frontend 06. A troca para a nova API começa no frontend 15. O exercício 14 é a atividade de criação dessa nova versão do backend.
 

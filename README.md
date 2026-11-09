@@ -14,7 +14,8 @@ Dev-Web-UFF/
 │   ├── Exercicio03-react/
 │   ├── ...
 │   ├── Exercicio15-zustand-com-nova-api/
-│   └── Exercicio16-login-parcialmente-completo/
+│   ├── Exercicio16-login-parcialmente-completo/
+│   └── Exercicio17-cadastro-produto-parcialmente-completo/
 └── pom.xml
 ```
 
@@ -22,7 +23,7 @@ Dev-Web-UFF/
 | --- | --- | --- |
 | Exercícios 03 a 05 | Nenhum | Interface e produtos locais |
 | Exercícios 06 a 13 | [Exercício 02](backend/Exercicio02-apirestful/) | **O consumo da primeira API começa no frontend 06** |
-| Exercícios 15 e 16 | [Exercício 14](backend/Exercicio14-apirestfulv2/) | **A troca de backend começa no frontend 15**; o 16 acrescenta o login |
+| Exercícios 15 a 17 | [Exercício 14](backend/Exercicio14-apirestfulv2/) | **A troca de backend começa no frontend 15**; o 16 acrescenta o login e o 17, cadastro/alteração de produto |
 
 Os exercícios 02 e 14 são os números das atividades em que os backends foram criados, não dos únicos frontends que podem usá-los. O 14 não tem um frontend próprio neste repositório.
 
@@ -121,6 +122,9 @@ Depois de entrar na pasta escolhida, execute `npm install` e `npm run dev`.
 | 13 — estado compartilhado | `frontend/Exercicio13-zustand-incompleto` | Backend 02 |
 | 15 — Zustand com a nova API | `frontend/Exercicio15-zustand-com-nova-api` | Backend 14 |
 | 16 — login parcialmente completo | `frontend/Exercicio16-login-parcialmente-completo` | Backend 14 |
+| 17 — cadastro de produto parcialmente completo | `frontend/Exercicio17-cadastro-produto-parcialmente-completo` | Backend 14 |
+
+No exercício 17, entre como admin para cadastrar um produto ou abrir um produto e editá-lo. Os comandos de execução e os limites desta etapa estão no [README do exercício 17](frontend/Exercicio17-cadastro-produto-parcialmente-completo/README.md).
 
 Os exercícios 03 a 05 precisam somente do terminal do frontend. No 06, execute uma das duas subpastas; o diretório pai contém apenas a organização das versões.
 
