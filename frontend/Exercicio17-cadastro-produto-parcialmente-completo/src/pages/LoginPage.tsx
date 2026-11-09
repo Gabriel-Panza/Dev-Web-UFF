@@ -110,12 +110,8 @@ const LoginPage = () => {
                 autoComplete="username"
                 disabled={entrando}
                 aria-invalid={!!errors.email}
-                aria-describedby="email-ajuda"
                 className="w-full rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-gray-900 outline-none hover:border-gray-500"
               />
-              <p id="email-ajuda" className="mt-1 text-sm text-gray-500">
-                O backend atual usa identificadores: para testar, informe admin.
-              </p>
               {errors.email && (
                 <p role="alert" className="mt-1 text-sm text-red-800">
                   {errors.email.message}
