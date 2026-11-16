@@ -40,7 +40,7 @@ class ProdutoCadastroHttpTest {
             assertThat(cadastrado.getDataCadastro()).isEqualTo(LocalDate.of(2025, 4, 26));
             assertThat(cadastrado.getPreco()).isEqualByComparingTo(new BigDecimal("2.45"));
             assertThat(cadastrado.getQtdEstoque()).isZero();
-            assertThat(cadastrado.isDisponivel()).isFalse();
+            assertThat(cadastrado.getDisponivel()).isFalse();
 
             String alteracao = "{\"id\":" + id + "," + dados.replace("Produto teste 17", "Produto alterado 17")
                 .replace("\"qtdEstoque\":0", "\"qtdEstoque\":10")
@@ -66,7 +66,7 @@ class ProdutoCadastroHttpTest {
         long categoriaId = categoriaRepository.findAll().stream()
             .filter(categoria -> !categoria.getId().equals(original.getCategoria().getId()))
             .findFirst().orElseThrow().getId();
-        boolean disponivel = !original.isDisponivel();
+        boolean disponivel = !original.getDisponivel();
         String alteracao = "{\"id\":" + id + ",\"nome\":\"Abacate 2026\","
             + "\"descricao\":\"Pacote de teste\",\"categoria\":{\"id\":" + categoriaId + "},"
             + "\"qtdEstoque\":42,\"dataCadastro\":\"2026-11-14\",\"preco\":8.75,"
@@ -89,7 +89,66 @@ class ProdutoCadastroHttpTest {
         }
     }
 
+    @Test
+    void deveCombinarAsRegrasComunsComAsRegrasDeIdDoPostEDoPut() throws Exception {
+        long quantidadeAntes = produtoRepository.count();
+        var mapper = JsonMapper.builder().build();
+
+        var cadastro = mapper.readTree(enviar("POST", "/produtos", "{\"id\":1,\"nome\":\"\"}", 400));
+        assertThat(cadastro.get("metodo").asText()).isEqualTo("POST");
+        assertThat(cadastro.get("requestUri").asText()).isEqualTo("/produtos");
+        assertThat(cadastro.get("map").get("id").asText()).contains("nulo");
+        assertThat(cadastro.get("map").get("nome").asText()).contains("informado");
+        assertThat(cadastro.get("map").has("disponivel")).isTrue();
+        assertThat(cadastro.get("map").has("qtdEstoque")).isTrue();
+
+        var alteracao = mapper.readTree(enviar("PUT", "/produtos",
+            "{\"qtdEstoque\":-1,\"preco\":0.09}", 400));
+        assertThat(alteracao.get("map").get("id").asText()).contains("informado");
+        assertThat(alteracao.get("map").get("qtdEstoque").asText()).contains("0");
+        assertThat(alteracao.get("map").get("preco").asText()).contains("0.1");
+        assertThat(produtoRepository.count()).isEqualTo(quantidadeAntes);
+    }
+
+    @Test
+    void deveRetornarErroEstruturadoQuandoACategoriaNaoExiste() throws Exception {
+        String dados = """
+            {"nome":"Produto teste","descricao":"1 unidade","imagem":"abacate.png",
+             "categoria":{"id":999999},"preco":0.10,"qtdEstoque":0,
+             "dataCadastro":"2025-04-26","disponivel":false}
+            """;
+        var erro = JsonMapper.builder().build().readTree(enviar("POST", "/produtos", dados, 400));
+        assertThat(erro.get("errorCode").asInt()).isEqualTo(400);
+        assertThat(erro.get("requestUri").asText()).isEqualTo("/produtos");
+        assertThat(erro.get("map").isNull()).isTrue();
+        assertThat(erro.get("message").asText()).containsIgnoringCase("PRODUTO_CATEGORIA_FK");
+    }
+
+    @Test
+    void devePermitirListagemEmOutrasPortasLocaisDoVite() throws Exception {
+        long categoriaId = categoriaRepository.findAll().getFirst().getId();
+        var client = java.net.http.HttpClient.newHttpClient();
+        for (String origem : new String[] {"http://localhost:5174", "http://127.0.0.1:5175"}) {
+            for (String caminho : new String[] {
+                "/produtos/paginacao?pagina=0&tamanho=5", "/categorias/mapstruct/" + categoriaId
+            }) {
+                var requisicao = java.net.http.HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:" + port + caminho))
+                    .timeout(java.time.Duration.ofSeconds(10))
+                    .header("Origin", origem).GET().build();
+                var resposta = client.send(requisicao, java.net.http.HttpResponse.BodyHandlers.ofString());
+                assertThat(resposta.statusCode()).isEqualTo(200);
+                assertThat(resposta.headers().firstValue("Access-Control-Allow-Origin"))
+                    .contains(origem);
+            }
+        }
+    }
+
     private String enviar(String metodo, String caminho, String json) throws Exception {
+        return enviar(metodo, caminho, json, 200);
+    }
+
+    private String enviar(String metodo, String caminho, String json, int statusEsperado) throws Exception {
         var conexao = (HttpURLConnection) URI.create("http://localhost:" + port + caminho).toURL().openConnection();
         try {
             conexao.setRequestMethod(metodo);
@@ -105,7 +164,7 @@ class ProdutoCadastroHttpTest {
             int status = conexao.getResponseCode();
             var fluxo = status < 400 ? conexao.getInputStream() : conexao.getErrorStream();
             String resposta = fluxo == null ? "" : new String(fluxo.readAllBytes(), StandardCharsets.UTF_8);
-            assertThat(status).as("%s %s: %s", metodo, caminho, resposta).isBetween(200, 299);
+            assertThat(status).as("%s %s: %s", metodo, caminho, resposta).isEqualTo(statusEsperado);
             return resposta;
         } finally {
             conexao.disconnect();

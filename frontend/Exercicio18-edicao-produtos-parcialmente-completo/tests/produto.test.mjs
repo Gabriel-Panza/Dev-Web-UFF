@@ -140,6 +140,7 @@ function montarForm(produto, pendente = false) {
     mutate: (payload, options) => chamadas.push({ modo, payload, options }),
   });
   const Form = carregar("src/components/ProdutoForm.tsx", {
+    "react-router-dom": { useNavigate: () => () => {}, Navigate: () => null },
     react: { useState: (inicial) => [inicial, (valor) => estados.push(valor)] },
     "react-hook-form": {
       useForm: (options) => {

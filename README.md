@@ -45,20 +45,22 @@ Dev-Web-UFF/
 │   ├── Exercicio15-zustand-com-nova-api/
 │   ├── Exercicio16-login-parcialmente-completo/
 │   ├── Exercicio17-cadastro-produto-parcialmente-completo/
-│   └── Exercicio18-edicao-produtos-parcialmente-completo/
+│   ├── Exercicio18-edicao-produtos-parcialmente-completo/
+│   ├── Exercicio19a-cadastro-de-produto-sem-nenhuma-validacao/
+│   └── Exercicio19b-cadastro-de-produto-com-validacao-no-cliente-em-andamento-incompleto/
 ├── pom.xml
 ├── LICENSE
 └── README.md
 ```
 
-| Atividade | Como executar | Dependência |
-| --- | --- | --- |
-| 01 | Aplicação Java no console, sem navegador | Banco de dados |
-| 02 | Primeira API REST | Banco de dados; atende os frontends 06 a 13 |
-| 03 a 05 | Somente frontend | Não precisam de API nem banco |
-| 06 a 13 | Backend + frontend, em dois terminais | Backend 02 e banco |
-| 14 | Segunda API REST | Banco de dados; atende os frontends 15 a 18 |
-| 15 a 18 | Backend + frontend, em dois terminais | Backend 14 e banco |
+| Atividade | Como executar                            | Dependência                                  |
+| --------- | ---------------------------------------- | -------------------------------------------- |
+| 01        | Aplicação Java no console, sem navegador | Banco de dados                               |
+| 02        | Primeira API REST                        | Banco de dados; atende os frontends 06 a 13  |
+| 03 a 05   | Somente frontend                         | Não precisam de API nem banco                |
+| 06 a 13   | Backend + frontend, em dois terminais    | Backend 02 e banco                           |
+| 14        | Segunda API REST                         | Banco de dados; atende os frontends 15 a 19b |
+| 15 a 19b  | Backend + frontend, em dois terminais    | Backend 14 e banco                           |
 
 **A primeira integração com backend começa no frontend 06. A troca para o backend novo acontece no frontend 15.** Os números 02 e 14 identificam as atividades de criação das APIs; por isso, não foram renomeados para 06 e 15.
 
@@ -118,7 +120,7 @@ Se preferir o Maven já instalado, substitua o caminho do wrapper por `mvn.cmd` 
 
 O `package.json` e o `package-lock.json` pertencem a cada aplicação. Instalar os pacotes de uma atividade não instala os das outras.
 
-Todos os comandos de início na seção de exercícios incluem `npm.cmd --prefix PASTA install`. Ele é necessário na primeira execução e depois de alterações de dependências. Nas execuções seguintes, basta o comando `run dev`. O uso de `npm.cmd` evita bloqueios do `npm.ps1` pela política de execução do PowerShell.
+Instale as dependências na primeira execução e depois de alterações de dependências. Nas execuções seguintes, execute `npm run dev` dentro da pasta que contém o `package.json`. Os exemplos com `npm.cmd --prefix PASTA` permitem executar o mesmo comando sem entrar na pasta. Se o PowerShell bloquear o `npm.ps1`, use `npm.cmd` no lugar de `npm`.
 
 Não é preciso instalar React, Tailwind, React Query, Zustand, Zod ou React Hook Form globalmente: o npm baixa as dependências declaradas de cada projeto.
 
@@ -150,7 +152,7 @@ Para o backend 02, use `$env:SPRING_DATASOURCE_PASSWORD` no lugar de `$env:DATAB
 
 ## Execução em dois terminais
 
-### Versão mais recente: exercício 18 + backend 14
+### Versão mais recente: exercício 15+ e backend 14
 
 Com o banco ligado, abra **dois terminais na raiz do repositório**.
 
@@ -165,13 +167,16 @@ Aguarde `Started ApirestfulApplication`. O backend ficará em `http://localhost:
 **Terminal 2 — interface:**
 
 ```powershell
-npm.cmd --prefix .\frontend\Exercicio18-edicao-produtos-parcialmente-completo install
-npm.cmd --prefix .\frontend\Exercicio18-edicao-produtos-parcialmente-completo run dev
+cd .\frontend\Exercicio...
+npm install
+npm run dev
 ```
 
-Abra a URL que o Vite informar, normalmente `http://localhost:5173`. Entre como `admin`, senha `desweb`, se a carga inicial não foi alterada. O campo E-mail aceita esse identificador, pois o backend ainda o chama de `conta`.
+Abra a URL que o Vite informar, normalmente `http://localhost:5174`. Entre como `admin`, senha `desweb`, se a carga inicial não foi alterada. O campo E-mail aceita esse identificador, pois o backend ainda o chama de `conta`.
 
-Para os exercícios **15, 16 ou 17**, mantenha o mesmo terminal da API e escolha a pasta do frontend na seção seguinte.
+Substitua `Exercicio...` pela pasta da atividade, conforme os comandos abaixo. Nos exercícios **19a e 19b**, o `package.json` está diretamente na pasta do exercício.
+
+Se a porta 5173 estiver ocupada, o Vite poderá iniciar em 5174 ou outra porta. Use a URL informada no terminal. O backend 14 permite requisições de desenvolvimento de `http://localhost` e `http://127.0.0.1` em portas alternativas. Após alterar essa configuração de CORS, reinicie a API.
 
 ### Exercícios 06 a 13 + backend 02
 
@@ -362,7 +367,7 @@ npm.cmd --prefix .\frontend\Exercicio13-zustand-incompleto run dev
 
 ### 14 — nova API com login didático
 
-**Atende os frontends 15 a 18 e requer banco.**
+**Atende os frontends 15 a 19b e requer banco.**
 
 Inicie com o comando do backend 14 em [Execução em dois terminais](#execução-em-dois-terminais).
 
@@ -426,25 +431,56 @@ Teste um nome somente numérico, data impossível, preço de 0,10 ou estoque fra
 
 O schema está em [produtoSchema.ts](frontend/Exercicio18-edicao-produtos-parcialmente-completo/src/schemas/produtoSchema.ts). `zodResolver(schema)` integra Zod ao React Hook Form e `z.infer<typeof schema>` define o tipo do formulário. A validação de datas usa `dayjs` com `customParseFormat` em modo estrito.
 
+### 19a — cadastro com validação no servidor
+
+**Requer backend 14 e banco.** Partindo da raiz do repositório:
+
+```powershell
+cd .\frontend\Exercicio19a-cadastro-de-produto-sem-nenhuma-validacao
+npm install
+npm run dev
+```
+
+Se o terminal já estiver em `frontend\Exercicio19a-cadastro-de-produto-sem-nenhuma-validacao`, execute diretamente:
+
+```powershell
+npm install
+npm run dev
+```
+
+O formulário envia os dados para validação na API. Consulte as [regras do exercício 19a](#validação-nos-exercícios-19a-e-19b).
+
+### 19b — cadastro com validação no cliente
+
+**Requer backend 14 e banco.** Em outro terminal na raiz do repositório, ou depois de encerrar o frontend anterior com `Ctrl+C`:
+
+```powershell
+cd .\frontend\Exercicio19b-cadastro-de-produto-com-validacao-no-cliente-em-andamento-incompleto
+npm install
+npm run dev
+```
+
+Nas execuções seguintes, dentro da mesma pasta, basta `npm run dev`. Abra a URL informada pelo Vite. O Zod valida os campos antes do envio; consulte as [regras do exercício 19b](#validação-nos-exercícios-19a-e-19b).
+
 ## Login e permissões
 
 Regras dos frontends **16 a 18**, usando as contas iniciais do backend 14:
 
 | Campo E-mail na tela | Senha inicial | Perfil |
-| --- | --- | --- |
-| `admin` | `desweb` | ADMIN |
-| `user` | `desweb` | USER |
+| -------------------- | ------------- | ------ |
+| `admin`              | `desweb`      | ADMIN  |
+| `user`               | `desweb`      | USER   |
 
 O campo visual é chamado **E-mail**, mas os valores iniciais são identificadores, não endereços de e-mail. `useEfetuarLogin` converte `email` para `conta` ao montar a requisição. As credenciais acima deixam de valer se forem alteradas no banco.
 
-| Acesso | Visitante | Usuário comum | Admin |
-| --- | --- | --- | --- |
-| Destino inicial `/` | Login | Home | Home |
-| Home, carrinho e listagem | Sim | Sim | Sim |
-| Favoritos e `/produtos/:id` | Não | Sim | Sim |
-| Cadastro de produto | Não | Não | Sim |
-| Edição, nos exercícios 17 e 18 | Não | Não | Sim |
-| Botões de editar/remover | Não | Não | Sim |
+| Acesso                         | Visitante | Usuário comum | Admin |
+| ------------------------------ | --------- | ------------- | ----- |
+| Destino inicial `/`            | Login     | Home          | Home  |
+| Home, carrinho e listagem      | Sim       | Sim           | Sim   |
+| Favoritos e `/produtos/:id`    | Não       | Sim           | Sim   |
+| Cadastro de produto            | Não       | Não           | Sim   |
+| Edição, nos exercícios 17 e 18 | Não       | Não           | Sim   |
+| Botões de editar/remover       | Não       | Não           | Sim   |
 
 - `PrivateRoutes` usa `Outlet` e `children` para separar rotas autenticadas e rotas com `apenasAdmin`.
 - Visitantes que tentam uma página privada vão ao login; usuários comuns tentando uma página de admin vão à home.
@@ -469,20 +505,27 @@ Nos exercícios 17 e 18, o formulário contém nome, descrição, categoria, est
 
 ### Regras do exercício 18
 
-| Campo | Validação |
-| --- | --- |
-| Nome | Obrigatório, mínimo de três caracteres e ao menos uma letra; aceita texto com números e letras acentuadas |
-| Descrição | Texto obrigatório |
-| Categoria | Número inteiro entre as opções 1, 2 e 3; não aceita 0 |
-| Data | Data real em formato estrito `YYYY-MM-DD`; rejeita dias impossíveis |
-| Preço | Decimal finito com até duas casas e **maior que 0,10** |
-| Estoque | Inteiro de 0 até 2147483647, compatível com o tipo Java `int` |
-| Imagem | Letras minúsculas sem acentos, seguidas de `.gif`, `.jpg`, `.png` ou `.bmp` |
-| Disponível | Booleano do checkbox |
+| Campo      | Validação                                                                                                 |
+| ---------- | --------------------------------------------------------------------------------------------------------- |
+| Nome       | Obrigatório, mínimo de três caracteres e ao menos uma letra; aceita texto com números e letras acentuadas |
+| Descrição  | Texto obrigatório                                                                                         |
+| Categoria  | Número inteiro entre as opções 1, 2 e 3; não aceita 0                                                     |
+| Data       | Data real em formato estrito `YYYY-MM-DD`; rejeita dias impossíveis                                       |
+| Preço      | Decimal finito com até duas casas e **maior que 0,10**                                                    |
+| Estoque    | Inteiro de 0 até 2147483647, compatível com o tipo Java `int`                                             |
+| Imagem     | Letras minúsculas sem acentos, seguidas de `.gif`, `.jpg`, `.png` ou `.bmp`                               |
+| Disponível | Booleano do checkbox                                                                                      |
 
 Nome, descrição e imagem têm limite de 255 caracteres. O formulário usa `noValidate` para exibir as mensagens do Zod, em vez dos avisos nativos do navegador. `isCategoriaValida` e `isDataValida` implementam as verificações do roteiro; a função de data mantém logs demonstrativos no console.
 
 Exemplos: `Produto 18` é um nome válido; `12345` não. `abacate.png` é válido; `Abacate.png`, `abacate1.png` e `foto.jpeg` não passam na regex solicitada.
+
+### Validação nos exercícios 19a e 19b
+
+Os dois usam a API do exercício 14. Os comandos completos estão nas seções [19a](#19a--cadastro-com-validação-no-servidor) e [19b](#19b--cadastro-com-validação-no-cliente). Execute `npm run dev` na pasta do exercício, que contém o `package.json`.
+
+- **19a — validação no servidor:** o formulário envia os dados, inclusive campos vazios, e a API devolve HTTP 400 com as mensagens por campo. A página de erro exibe o JSON da resposta. O POST exige ID ausente ou nulo; o PUT exige ID informado. A API aceita preço a partir de 0,10 e estoque a partir de zero.
+- **19b — validação no cliente e no servidor:** o Zod exibe os erros abaixo dos campos e impede o envio até que o formulário seja válido. O cliente exige nome com no mínimo três caracteres, data válida, preço **maior que 0,10** e nome de imagem com letras minúsculas e uma extensão do roteiro. Se o servidor rejeitar uma requisição que passou pelo formulário, a página de erro continua disponível.
 
 ### Onde colocar a imagem
 
@@ -562,9 +605,9 @@ Os testes do frontend usam requisições e hooks simulados para conferir formul�
 
 Os arquivos `ProdutoMapperImpl.java` e `CategoriaMapperImpl.java` dos backends 02 e 14 são gerados pelo MapStruct. Edite as interfaces em `src/main/java`, não os arquivos de `target`.
 
-| Compilador | Classes | Mappers gerados |
-| --- | --- | --- |
-| Maven no terminal | `target/classes` | `target/generated-sources/annotations` |
+| Compilador               | Classes              | Mappers gerados                            |
+| ------------------------ | -------------------- | ------------------------------------------ |
+| Maven no terminal        | `target/classes`     | `target/generated-sources/annotations`     |
 | VS Code/Eclipse, via m2e | `target/ide-classes` | `target/generated-sources/ide-annotations` |
 
 A separação evita que os compiladores sobrescrevam o mesmo mapper simultaneamente. O processamento inclui `lombok-mapstruct-binding` para integrar Lombok e MapStruct.
@@ -575,24 +618,24 @@ Se o VS Code mantiver erros antigos, execute **Java: Clean Java Language Server 
 
 ## Problemas comuns
 
-| Sintoma | O que conferir |
-| --- | --- |
-| `mvn` não é reconhecido ou `MAVEN_HOME` está vazio | Use o `mvnw.cmd` incluído, com Java 25 instalado |
-| `JAVA_HOME` inválido ou erro de compilação `release 25` | Verifique `java -version`, `JAVA_HOME` e qual JDK o terminal selecionou |
-| `Missing artifact corejava:console:jar:1.0` | Instale localmente a biblioteca do exercício 01 fornecida pelo professor |
-| `npm.ps1 cannot be loaded` | Use `npm.cmd`, como nos exemplos |
-| `ENOENT ... package.json` | Confira o caminho; no 06, selecione uma das duas subpastas |
-| `Port 8080 was already in use` | Pare a API anterior; não inicie 02 e 14 juntos |
-| Erro de conexão com MySQL | Ligue o banco e confira porta, existência de `desweb`, usuário e senha |
-| A conexão com a UFF demora ou falha | Fora da universidade, force localhost com o argumento dos comandos rápidos |
-| Interface mostra erro ao buscar produtos | Confira se o backend correspondente está iniciado e responde em `/produtos` |
-| Login recebe resposta incompatível | Confirme que está usando o backend 14 atualizado, não o 02 |
-| Login inválido | Use as credenciais cadastradas; os valores iniciais são `admin`/`desweb` e `user`/`desweb` |
-| Produto não aparece após uma busca | Limpe o filtro e confira a página selecionada; produtos removidos não reaparecem apenas ao reiniciar |
-| Imagem quebrada | Confira o arquivo em `public/` da atividade em execução e o nome salvo no produto |
-| Nome de imagem rejeitado no 18 | Confira a regex: letras minúsculas e uma das quatro extensões permitidas |
-| Erros nos `MapperImpl` | Reimporte o Maven e gere novamente pelo build; não corrija o arquivo gerado manualmente |
-| Build do 18 alerta sobre pacote JavaScript grande | É um aviso de tamanho, não uma falha de compilação; não equivale a um erro de formulário |
+| Sintoma                                                 | O que conferir                                                                                       |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `mvn` não é reconhecido ou `MAVEN_HOME` está vazio      | Use o `mvnw.cmd` incluído, com Java 25 instalado                                                     |
+| `JAVA_HOME` inválido ou erro de compilação `release 25` | Verifique `java -version`, `JAVA_HOME` e qual JDK o terminal selecionou                              |
+| `Missing artifact corejava:console:jar:1.0`             | Instale localmente a biblioteca do exercício 01 fornecida pelo professor                             |
+| `npm.ps1 cannot be loaded`                              | Use `npm.cmd`, como nos exemplos                                                                     |
+| `ENOENT ... package.json`                               | Confira o caminho; no 06, selecione uma das duas subpastas                                           |
+| `Port 8080 was already in use`                          | Pare a API anterior; não inicie 02 e 14 juntos                                                       |
+| Erro de conexão com MySQL                               | Ligue o banco e confira porta, existência de `desweb`, usuário e senha                               |
+| A conexão com a UFF demora ou falha                     | Fora da universidade, force localhost com o argumento dos comandos rápidos                           |
+| Interface mostra erro ao buscar produtos                | Confira se o backend correspondente está iniciado e responde em `/produtos`                          |
+| Login recebe resposta incompatível                      | Confirme que está usando o backend 14 atualizado, não o 02                                           |
+| Login inválido                                          | Use as credenciais cadastradas; os valores iniciais são `admin`/`desweb` e `user`/`desweb`           |
+| Produto não aparece após uma busca                      | Limpe o filtro e confira a página selecionada; produtos removidos não reaparecem apenas ao reiniciar |
+| Imagem quebrada                                         | Confira o arquivo em `public/` da atividade em execução e o nome salvo no produto                    |
+| Nome de imagem rejeitado no 18                          | Confira a regex: letras minúsculas e uma das quatro extensões permitidas                             |
+| Erros nos `MapperImpl`                                  | Reimporte o Maven e gere novamente pelo build; não corrija o arquivo gerado manualmente              |
+| Build do 18 alerta sobre pacote JavaScript grande       | É um aviso de tamanho, não uma falha de compilação; não equivale a um erro de formulário             |
 
 Não execute `npm audit fix --force` indiscriminadamente: atualizações incompatíveis podem alterar o ambiente dos exercícios. Alertas de dependência devem ser analisados antes de publicar a aplicação.
 

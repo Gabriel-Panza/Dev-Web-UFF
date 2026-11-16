@@ -1,6 +1,11 @@
 package com.carloribeiro.apirestful.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,21 +20,33 @@ import java.time.LocalDate;
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Null(groups = OnCreate.class, message = "O 'Id' deve ser nulo no cadastro.")
+    @NotNull(groups = OnUpdate.class, message = "O 'Id' deve ser informado na alteração.")
     private Long id;
+    @NotEmpty(message = "A 'Imagem' deve ser informada.")
     private String imagem;
+    @NotEmpty(message = "O 'Nome' deve ser informado.")
     private String nome;
+    @NotEmpty(message = "A 'Descrição' deve ser informada.")
     private String descricao;
-    private boolean disponivel;
-    private int qtdEstoque;
+    @NotNull(message = "O campo 'Disponível' deve ser informado.")
+    private Boolean disponivel;
+    @NotNull(message = "A 'Quantidade em estoque' deve ser informada.")
+    @Min(value = 0, message = "A 'Quantidade em estoque' deve ser maior ou igual a 0.")
+    private Integer qtdEstoque;
+    @NotNull(message = "O 'Preço' deve ser informado.")
+    @DecimalMin(inclusive = true, value = "0.1", message = "O 'Preço' deve ser maior ou igual a 0.1.")
     private BigDecimal preco;
+    @NotNull(message = "A 'Data de Cadastro' deve ser informada.")
     private LocalDate dataCadastro;
 
+    @NotNull(message = "A 'Categoria' deve ser informada.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "PRODUTO_CATEGORIA_FK"))
     private Categoria categoria;
 
     public Produto(String imagem, String nome, String descricao,
-                   boolean disponivel, int qtdEstoque, BigDecimal preco,
+                   Boolean disponivel, Integer qtdEstoque, BigDecimal preco,
                    LocalDate dataCadastro, Categoria categoria) {
         this.imagem = imagem;
         this.nome = nome;
@@ -40,4 +57,7 @@ public class Produto {
         this.dataCadastro = dataCadastro;
         this.categoria = categoria;
     }
+
+    public interface OnCreate {}
+    public interface OnUpdate {}
 }

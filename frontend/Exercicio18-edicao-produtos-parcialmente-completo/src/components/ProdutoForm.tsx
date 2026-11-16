@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import databaseAdd from "../assets/skin/database_add.png";
 import databaseSave from "../assets/skin/database_save.png";
+import databaseCancel from "../assets/skin/multiply.png";
 import type { Produto } from "../interfaces/Produto";
 import type { ProdutoForm as ProdutoFormDados } from "../interfaces/ProdutoForm";
 import useCadastrarProduto from "../hooks/useCadastrarProduto";
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const ProdutoForm = ({ produto }: Props) => {
+  const navigate = useNavigate();
   const [mensagem, setMensagem] = useState("");
   const [idAlterado, setIdAlterado] = useState<number | null>(null);
   const {
@@ -302,7 +304,7 @@ const ProdutoForm = ({ produto }: Props) => {
         <div className="mb-6 grid grid-cols-12 gap-1">
           <div className="col-span-12 mb-1 lg:col-span-6 lg:mb-3">
             <div className="grid grid-cols-12">
-              <div className="col-span-12 lg:col-start-4 xl:col-start-3">
+              <div className="col-span-12 flex gap-3 lg:col-start-4 xl:col-start-3">
                 <button
                   type="submit"
                   disabled={salvando}
@@ -325,6 +327,15 @@ const ProdutoForm = ({ produto }: Props) => {
                     : produto
                       ? "Salvar alterações"
                       : "Cadastrar"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  disabled={salvando}
+                  className="btn-secondary flex items-center justify-center px-5 py-1.5"
+                >
+                  <img src={databaseCancel} className="me-2" alt="" />
+                  Cancelar
                 </button>
               </div>
             </div>

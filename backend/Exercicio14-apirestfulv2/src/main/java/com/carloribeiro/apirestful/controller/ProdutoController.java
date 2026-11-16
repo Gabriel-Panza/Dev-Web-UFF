@@ -10,12 +10,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.groups.Default;
 
-@CrossOrigin("http://localhost:5173")
+// O Vite escolhe outra porta quando a 5173 já está ocupada.
+@CrossOrigin(originPatterns = {"http://localhost:*", "http://127.0.0.1:*"})
 @RestController
 @RequestMapping("produtos")
 public class ProdutoController {
@@ -45,13 +48,25 @@ public class ProdutoController {
         }
     }
 
+    // @Validated({Default.class, Produto.OnCreate.class}) valida o corpo antes de entrar no método.
+    // Default reúne as regras comuns, como @NotEmpty, @NotNull, @Min e @DecimalMin.
+    // OnCreate reúne a regra do POST: @Null exige que o id seja nulo.
+    // No PUT, OnUpdate usa @NotNull para exigir o id.
+    //
+    // Diferença entre @Valid e @Validated:
+    // @Valid é a anotação do Bean Validation e, sozinha neste @RequestBody, usa o grupo Default.
+    // Ela valida, por exemplo, @NotEmpty no nome, mas não as regras de OnCreate e OnUpdate.
+    // @Validated é do Spring e permite escolher os grupos. Só OnCreate validaria o id,
+    // deixando nome, descrição e imagem de fora. Com Default e OnCreate, ambas as regras rodam.
     @PostMapping
-    public Produto cadastrarProduto(@RequestBody Produto produto) {
+    public Produto cadastrarProduto(
+        @RequestBody @Validated({Default.class, Produto.OnCreate.class}) Produto produto) {
         return produtoService.cadastrarProduto(produto);
     }
 
     @PutMapping
-    public Produto alterarProduto(@RequestBody Produto produto) {
+    public Produto alterarProduto(
+        @RequestBody @Validated({Default.class, Produto.OnUpdate.class}) Produto produto) {
         return produtoService.alterarProduto(produto);
     }
 
