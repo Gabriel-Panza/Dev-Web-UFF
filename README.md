@@ -27,7 +27,8 @@ Dev-Web-UFF/
 ├── backend/
 │   ├── Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/
 │   ├── Exercicio02-apirestful/
-│   └── Exercicio14-apirestfulv2/
+│   ├── Exercicio14-apirestfulv2/
+│   └── Exercicio20-apirestful-com-spring-security/
 ├── frontend/
 │   ├── Exercicio03-react/
 │   ├── Exercicio04-navbar/
@@ -47,7 +48,8 @@ Dev-Web-UFF/
 │   ├── Exercicio17-cadastro-produto-parcialmente-completo/
 │   ├── Exercicio18-edicao-produtos-parcialmente-completo/
 │   ├── Exercicio19a-cadastro-de-produto-sem-nenhuma-validacao/
-│   └── Exercicio19b-cadastro-de-produto-com-validacao-no-cliente-em-andamento-incompleto/
+│   ├── Exercicio19b-cadastro-de-produto-com-validacao-no-cliente-em-andamento-incompleto/
+│   └── Exercicio20-spring-security/
 ├── pom.xml
 ├── LICENSE
 └── README.md
@@ -61,12 +63,13 @@ Dev-Web-UFF/
 | 06 a 13   | Backend + frontend, em dois terminais    | Backend 02 e banco                           |
 | 14        | Segunda API REST                         | Banco de dados; atende os frontends 15 a 19b |
 | 15 a 19b  | Backend + frontend, em dois terminais    | Backend 14 e banco                           |
+| 20        | Backend + frontend com Spring Security   | Backend 20 e banco `desweb20`                |
 
 **A primeira integração com backend começa no frontend 06. A troca para o backend novo acontece no frontend 15.** Os números 02 e 14 identificam as atividades de criação das APIs; por isso, não foram renomeados para 06 e 15.
 
 O exercício 01 está em `backend/` por ser Java com persistência, mas **não é um servidor HTTP**. O exercício 14 é uma atividade de backend, sem frontend de número 14.
 
-As duas APIs usam a porta `8080`. Execute apenas uma por vez. As versões React normalmente usam `5173`; para seguir os exemplos sem conflito, execute um frontend por vez.
+As APIs usam a porta `8080`. Execute apenas uma por vez. As versões React normalmente usam `5173`; para seguir os exemplos sem conflito, execute um frontend por vez.
 
 ## Preparar o ambiente
 
@@ -152,7 +155,9 @@ Para o backend 02, use `$env:SPRING_DATASOURCE_PASSWORD` no lugar de `$env:DATAB
 
 ## Execução em dois terminais
 
-### Versão mais recente: exercício 15+ e backend 14
+Para executar a versão com Spring Security, siga os [comandos do exercício 20](#20--autenticação-e-autorização-com-spring-security).
+
+### Exercícios 15 a 19b com o backend 14
 
 Com o banco ligado, abra **dois terminais na raiz do repositório**.
 
@@ -197,7 +202,7 @@ npm.cmd --prefix .\frontend\Exercicio09-pesquisa_produto run dev
 
 O Vite encaminha requisições de `/api` para `http://localhost:8080`. Esse proxy é de desenvolvimento; uma publicação fora do Vite precisaria de configuração equivalente.
 
-Para encerrar uma aplicação, pressione **Ctrl+C** no terminal dela. Pare a API atual antes de trocar entre 02 e 14.
+Para encerrar uma aplicação, pressione **Ctrl+C** no terminal dela. Pare a API atual antes de trocar de exercício.
 
 ## Fluxo de cada exercício
 
@@ -462,6 +467,50 @@ npm run dev
 
 Nas execuções seguintes, dentro da mesma pasta, basta `npm run dev`. Abra a URL informada pelo Vite. O Zod valida os campos antes do envio; consulte as [regras do exercício 19b](#validação-nos-exercícios-19a-e-19b).
 
+### 20 — autenticação e autorização com Spring Security
+
+Use o [backend 20](backend/Exercicio20-apirestful-com-spring-security/) com o [frontend 20](frontend/Exercicio20-spring-security/). Crie o banco local `desweb20` no MySQL ou MariaDB na porta `3306`:
+
+```powershell
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS desweb20 CHARACTER SET utf8mb4;"
+```
+
+No XAMPP, o comando equivalente usa `& "C:\xampp\mysql\bin\mysql.exe"` no lugar de `mysql`. Use `-p` se o usuário do banco tiver senha.
+
+**Terminal 1 — API.** A partir da raiz, entre na pasta do backend e gere uma chave local para assinar o token:
+
+```powershell
+cd .\backend\Exercicio20-apirestful-com-spring-security
+if (-not (Test-Path .env)) {
+    $chaveJwt = [byte[]]::new(32)
+    $gerador = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    $gerador.GetBytes($chaveJwt)
+    $gerador.Dispose()
+    "CHAVE_SECRETA=$([Convert]::ToBase64String($chaveJwt))" | Set-Content -Encoding ASCII .env
+}
+.\mvnw.cmd spring-boot:run
+```
+
+O arquivo `.env` fica na pasta do backend. Se o acesso ao banco exigir senha ou outro usuário, defina `DATABASE_PASSWORD` e `DATABASE_USER` no terminal antes de iniciar a API. Aguarde a inicialização na porta `8080`.
+
+**Terminal 2 — interface.** A partir da raiz:
+
+```powershell
+cd .\frontend\Exercicio20-spring-security
+npm.cmd ci
+npm.cmd run dev
+```
+
+Abra a URL informada pelo Vite. As contas iniciais são `admin@mail.com` (ADMIN) e `user@mail.com` (USER), ambas com a senha `desweb`. O login retorna um token JSON assinado (JWT) com validade de duas horas. O React mantém o token em memória e o envia no cabeçalho `Authorization: Bearer`.
+
+| Operação de produtos | Visitante | USER | ADMIN |
+| -------------------- | --------- | ---- | ----- |
+| Consultar            | Sim       | Sim  | Sim   |
+| Cadastrar            | Não       | Sim  | Sim   |
+| Editar e remover     | Não       | Não  | Sim   |
+
+A API aplica essas permissões mesmo em requisições diretas. Para testá-las com [testes.http](backend/Exercicio20-apirestful-com-spring-security/src/main/resources/testes.http), faça login e copie o token retornado para a variável `token` no início do arquivo. As telas de carrinho e favoritos vieram no frontend como exemplos de navegação. A API usa um banco separado dos exercícios anteriores e preserva os cadastros ao reiniciar.
+
 ## Login e permissões
 
 Regras dos frontends **16 a 18**, usando as contas iniciais do backend 14:
@@ -545,9 +594,10 @@ As configurações ficam em:
 
 - [persistence.xml do exercício 01](backend/Exercicio01-Produto-Inclui-Altera-Exclui-incompleto/src/main/resources/META-INF/persistence.xml);
 - [application.properties do backend 02](backend/Exercicio02-apirestful/src/main/resources/application.properties);
-- [application.properties do backend 14](backend/Exercicio14-apirestfulv2/src/main/resources/application.properties).
+- [application.properties do backend 14](backend/Exercicio14-apirestfulv2/src/main/resources/application.properties);
+- [application.properties do backend 20](backend/Exercicio20-apirestful-com-spring-security/src/main/resources/application.properties).
 
-Para tentar UFF primeiro e localhost como fallback, use os comandos normais de início **sem** o argumento que força `spring.datasource.url`. Não é necessário alterar o código Java para escolher essa configuração.
+Nos backends 02 e 14, para tentar UFF primeiro e localhost como fallback, use os comandos normais de início **sem** o argumento que força `spring.datasource.url`. O backend 20 usa localhost por padrão.
 
 As APIs usam `spring.jpa.hibernate.ddl-auto=update`, preservando os dados entre execuções. O backend 02 interrompe a carga inicial quando já há produtos; o 14 evita recriar as contas e não repete a carga de categorias/produtos se já houver dados. Por isso, **reiniciar a API normalmente não reinserirá cada produto removido**.
 
@@ -567,7 +617,7 @@ Se precisar recomeçar a atividade e puder perder os dados atuais, pare a API, f
 
 ### Java
 
-O [POM da raiz](pom.xml) agrega os três projetos de `backend/`. Para compilar e testar todos sem iniciar as APIs de uso:
+O [POM da raiz](pom.xml) agrega os quatro projetos de `backend/`. Para compilar e testar todos sem iniciar as APIs de uso:
 
 ```powershell
 .\backend\Exercicio14-apirestfulv2\mvnw.cmd test
@@ -625,7 +675,7 @@ Se o VS Code mantiver erros antigos, execute **Java: Clean Java Language Server 
 | `Missing artifact corejava:console:jar:1.0`             | Instale localmente a biblioteca do exercício 01 fornecida pelo professor                             |
 | `npm.ps1 cannot be loaded`                              | Use `npm.cmd`, como nos exemplos                                                                     |
 | `ENOENT ... package.json`                               | Confira o caminho; no 06, selecione uma das duas subpastas                                           |
-| `Port 8080 was already in use`                          | Pare a API anterior; não inicie 02 e 14 juntos                                                       |
+| `Port 8080 was already in use`                          | Pare a API que já está em execução antes de iniciar outra                                            |
 | Erro de conexão com MySQL                               | Ligue o banco e confira porta, existência de `desweb`, usuário e senha                               |
 | A conexão com a UFF demora ou falha                     | Fora da universidade, force localhost com o argumento dos comandos rápidos                           |
 | Interface mostra erro ao buscar produtos                | Confira se o backend correspondente está iniciado e responde em `/produtos`                          |
